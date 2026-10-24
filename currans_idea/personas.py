@@ -1,5 +1,5 @@
-# appunti: 5 profili ricalibrati sul dataset da 45.566 messaggi reali
-# gruppo: Calcio Gruppo
+# appunti: 5 profili ricalibrati sul dataset da oltre 45 mila messaggi reali
+# community telegram sportiva
 
 PERSONAS = {
     1: {

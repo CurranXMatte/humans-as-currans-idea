@@ -5,20 +5,20 @@
 
 **Humans as Curran's Idea** è un motore euristico e comportamentale progettato per generare risposte realistiche da parte di bot sotto i post di canali Telegram a tema calcistico e Fantacalcio.
 
-A differenza dei bot tradizionali (spesso rigidi, prolissi, con punteggiatura accademica e facilmente riconoscibili come IA), questo modello è stato calibrato analizzando ed elaborando **45.566 messaggi reali** da oltre 900 utenti di una vera community Telegram sportiva (*Calcio Gruppo*).
+A differenza dei bot tradizionali (spesso rigidi, prolissi, con punteggiatura accademica e facilmente riconoscibili come IA), questo modello è stato calibrato analizzando ed elaborando **oltre 45 mila messaggi reali** da **oltre 1.240 utenti** di una vera community Telegram sportiva.
 
 ---
 
-## 📊 I Numeri dell'Interazione Umana Reale (Dataset da 45.566 Messaggi)
+## 📊 I Numeri dell'Interazione Umana Reale (Dataset da oltre 45 mila messaggi reali)
 
-L'analisi su vasta scala condotta sui messaggi del gruppo ha confermato e affinato le metriche cardine:
+L'analisi su vasta scala condotta sui dati della community ha confermato e affinato le metriche cardine:
 
-| Metrica | Dati Reali del Gruppo (45.5k msgs) | Regola dell'Algoritmo |
+| Metrica | Dati Reali (Oltre 45k messaggi reali) | Regola dell'Algoritmo |
 | :--- | :--- | :--- |
 | **Lunghezza Mediana** | **4 parole** | Brevità estrema: vietato generare temi o papiri. |
 | **Messaggi Ultra-Corti (1-3 parole)** | **43.1%** del totale | Quasi metà delle reazioni contiene solo 1-3 parole. |
 | **Messaggi Medi (4-10 parole)** | **40.7%** del totale | Commenti secchi, battute veloci o polemiche immediate. |
-| **Messaggi Telegrafici (1-2 parole)** | **>29%** (13.368 messaggi) | Giudizi tombali a caldo (*godo*, *che cesso*, *meritato*). |
+| **Messaggi Telegrafici (1-2 parole)** | **>29%** (oltre 13.000 messaggi) | Giudizi tombali a caldo (*godo*, *che cesso*, *meritato*). |
 | **Assenza di punto finale (`.`)** | **90.7%** dei messaggi | **Regola ferrea:** Nessun punto fermo a fine frase. |
 | **Inizio con lettera minuscola** | **28.5%** dei messaggi | Minuscole naturali da digitazione rapida da smartphone. |
 | **Distribuzione temporale** | 2s — 90s | I messaggi arrivano con jitter asincrono, mai in blocco. |
