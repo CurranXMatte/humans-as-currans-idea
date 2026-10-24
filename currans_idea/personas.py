@@ -1,15 +1,13 @@
-"""
-The 5 Core Personas of 'Humans as Curran's Idea'.
-Each persona models a distinct psychological archetype found in real football chat groups.
-"""
+# appunti: 5 profili base estratti dai messaggi del gruppo
+# da sistemare: aggiungere magari un sesto se serve
 
 PERSONAS = {
     1: {
         "id": 1,
         "key": "emotivo",
         "name": "L'Emotivo di Pancia",
-        "description": "Reazione immediata di pura estasi o rabbia cieca.",
-        "style_guide": "Maiuscolo parziale o totale, esclamativi multipli, sfogo immediato, no punti finali.",
+        "description": "Reazione a caldo, caps lock, rabbia o esaltazione",
+        "style_guide": "Maiuscolo parziale o totale, esclamativi multipli, sfogo immediato, no punti finali",
         "min_words": 2,
         "max_words": 6,
         "delay_range": (2, 6),
@@ -25,8 +23,8 @@ PERSONAS = {
         "id": 2,
         "key": "cinico",
         "name": "Il Cinico Disfattista",
-        "description": "Sminuisce l'azione, critica i singoli o prevede la beffa imminente.",
-        "style_guide": "Tutto minuscolo, tono piatto, zero entusiasmo, disillusione.",
+        "description": "Sminuisce tutto, critica la difesa o prevede il pareggio",
+        "style_guide": "Tutto minuscolo, tono piatto, zero entusiasmo, disillusione",
         "min_words": 4,
         "max_words": 8,
         "delay_range": (12, 22),
@@ -42,8 +40,8 @@ PERSONAS = {
         "id": 3,
         "key": "troll",
         "name": "Il Troll / Sfottò",
-        "description": "Prende in giro tifosi avversari o singoli, usa risate scritte realistiche.",
-        "style_guide": "Perculatorio, ironia diretta da bar/stadio, risate veloci (ahahah, hahahaha), zero emoji finte.",
+        "description": "Prende per il culo, risate realistiche",
+        "style_guide": "Perculatorio, ironia diretta da bar, risate veloci (ahahah, hahahaha), zero emoji finte",
         "min_words": 4,
         "max_words": 9,
         "delay_range": (25, 38),
@@ -59,8 +57,8 @@ PERSONAS = {
         "id": 4,
         "key": "fanta",
         "name": "L'Ossessionato da Fanta / Schedine",
-        "description": "Filtra ogni evento attraverso bonus, malus, schedine saltate o rivali di lega.",
-        "style_guide": "Lamentele su over/under, gol subiti dal portiere, rivale di giornata, 'sto cane/sto cesso'.",
+        "description": "Pensa solo a bonus, malus o bollette bruciate",
+        "style_guide": "Lamentele su over/under, gol subiti dal portiere, rivale di giornata, 'sto cane/sto cesso'",
         "min_words": 5,
         "max_words": 10,
         "delay_range": (40, 60),
@@ -76,11 +74,11 @@ PERSONAS = {
         "id": 5,
         "key": "telegrafico",
         "name": "Il Telegrafico",
-        "description": "Commento di passaggio con massimo 1 o 2 parole, giudizio tombalo.",
-        "style_guide": "Massimo 2 parole, nessun termine ricercato, crudo e quotidiano.",
+        "description": "Massimo 1 o 2 parole, giudizio tombalo",
+        "style_guide": "Massimo 2 parole, nessun termine ricercato, crudo e quotidiano",
         "min_words": 1,
         "max_words": 2,
-        "delay_range": (60, 90),
+        "delay_range": (60, 90), # forse abbassare delay?
         "sample_responses": [
             "che cesso",
             "godo",

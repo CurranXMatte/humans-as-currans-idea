@@ -1,31 +1,25 @@
-#!/usr/bin/env python3
-"""
-Humans as Curran's Idea - Interactive CLI Playground
-"""
 import sys
 import time
 from currans_idea.engine import CurransIdeaEngine
 
+# vedere protocolli telegram dopo
 def main():
     engine = CurransIdeaEngine()
 
-    print("=" * 65)
-    print("  HUMANS AS CURRAN'S IDEA — Telegram Bot Persona Simulator")
-    print("  Calibrated on 3,856 real chat messages | v2.0")
-    print("=" * 65)
-    print("Digita un evento calcistico (es: 'Gol inter 1-0 calhanoglu', 'Rigore sbagliato', 'Espulsione theo')")
-    print("oppure 'exit' per uscire.\n")
+    print("=" * 60)
+    print("  Curran's Idea - Test Bot Personas")
+    print("=" * 60)
+    print("Scrivi un evento (es: 'Gol inter', 'Rigore sbagliato') o 'exit'\n")
 
     while True:
         try:
-            event = input("\n[Evento / Post Canale] > ").strip()
+            event = input("[evento] > ").strip()
             if not event:
                 continue
             if event.lower() in ["exit", "quit", "q"]:
-                print("Chiusura simulatore. Ciao!")
                 break
 
-            print(f"\n--- Simulazione risposte per: '{event}' ---")
+            print(f"\n--- risposte per: '{event}' ---")
             reactions = engine.simulate_mock_reactions(event)
 
             for r in reactions:
@@ -33,10 +27,10 @@ def main():
                 print(f"       > {r['message']}\n")
 
         except KeyboardInterrupt:
-            print("\nUscita.")
+            print("\nesco")
             break
         except Exception as e:
-            print(f"Errore: {e}")
+            print(f"err: {e}")
 
 if __name__ == "__main__":
     main()

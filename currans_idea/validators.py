@@ -1,11 +1,7 @@
-"""
-Heuristic validators to prevent artificial/robotic language patterns.
-Based on empirical analysis of real Telegram chat logs.
-"""
 import re
 
+# lista parole vietate (troppo da boomer o giornalisti tv)
 BANNED_EXPRESSIONS = [
-    # Boomer / Journalistic TV clichés
     "i cugini",
     "la compagine",
     "la compagine ospite",
@@ -19,8 +15,6 @@ BANNED_EXPRESSIONS = [
     "estremo difensore",
     "rettangolo verde",
     "massima serie",
-    
-    # Overly academic / artificial words
     "telefonatissimo",
     "geometrico",
     "magistrale",
@@ -30,29 +24,26 @@ BANNED_EXPRESSIONS = [
     "consueto"
 ]
 
-def clean_trailing_punctuation(text: str) -> str:
-    """Removes trailing dots or formal terminal marks."""
+def clean_trailing_punctuation(text):
     text = text.strip()
     while text.endswith("."):
         text = text[:-1].strip()
     return text
 
-def validate_banned_words(text: str) -> bool:
-    """Returns False if text contains any banned boomer/journalist expressions."""
+def validate_banned_words(text):
     lower = text.lower()
-    for banned in BANNED_EXPRESSIONS:
-        if banned in lower:
+    for b in BANNED_EXPRESSIONS:
+        if b in lower:
             return False
     return True
 
-def validate_and_clean(text: str, persona_id: int, max_words: int) -> str:
-    """
-    Cleans text and ensures it adheres to human chat heuristics.
-    """
+# todo: rivedere lunghezza max per il cinico
+def validate_and_clean(text, persona_id, max_words):
     text = clean_trailing_punctuation(text)
     
     if not validate_banned_words(text):
-        raise ValueError(f"Text contains banned journalist/boomer vocabulary: '{text}'")
+        # da gestire meglio l'eccezione
+        raise ValueError(f"bloccato per parole cringe: {text}")
         
     words = text.split()
     if len(words) > max_words:
