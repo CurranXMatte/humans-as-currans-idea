@@ -1,12 +1,12 @@
-# appunti: 5 profili base estratti dai messaggi del gruppo
-# da sistemare: aggiungere magari un sesto se serve
+# appunti: 5 profili ricalibrati sul dataset da 45.566 messaggi reali
+# gruppo: Calcio Gruppo
 
 PERSONAS = {
     1: {
         "id": 1,
         "key": "emotivo",
         "name": "L'Emotivo di Pancia",
-        "description": "Reazione a caldo, caps lock, rabbia o esaltazione",
+        "description": "Reazione a caldo, caps lock, goduria o rabbia pura",
         "style_guide": "Maiuscolo parziale o totale, esclamativi multipli, sfogo immediato, no punti finali",
         "min_words": 2,
         "max_words": 6,
@@ -14,43 +14,49 @@ PERSONAS = {
         "sample_responses": [
             "SEEEEEEE PROPRIO LUI GODOOO",
             "NON CI CREDO MA COME SI FA DAI",
+            "MAMMA MIA CHE GOL",
             "MA VAI A CAGARE VA",
-            "MAMMA MIA CHE GIOCATORE",
-            "GODO COME UN RICCIO SEEE"
+            "GODO COME UN RICCIO SEEE",
+            "GOL CLAMOROSO MAMMA MIA",
+            "CHE CAZZO DI GOL",
+            "GODOOOOOOOOO"
         ]
     },
     2: {
         "id": 2,
         "key": "cinico",
         "name": "Il Cinico Disfattista",
-        "description": "Sminuisce tutto, critica la difesa o prevede il pareggio",
-        "style_guide": "Tutto minuscolo, tono piatto, zero entusiasmo, disillusione",
+        "description": "Sminuisce tutto con 'tanto', 'comunque', parla di botte di culo",
+        "style_guide": "Tutto minuscolo, tono piatto, disillusione totale, focus sul culo avversario",
         "min_words": 4,
         "max_words": 8,
         "delay_range": (12, 22),
         "sample_responses": [
+            "tanto so già come va a finire",
             "difesa imbarazzante comunque dormivano tutti",
             "rigore osceno comunque giocatore pippissimo",
-            "tanto mo pareggiano sicuro come al solito",
+            "il culo che hanno questi comunque clamoroso",
+            "partita orrenda comunque vinta solo a culo",
             "non esaltatevi che fan cagare entrambi",
-            "gol casuale a porta vuota praticamente"
+            "tanto mo pareggiano sicuro come al solito"
         ]
     },
     3: {
         "id": 3,
         "key": "troll",
         "name": "Il Troll / Sfottò",
-        "description": "Prende per il culo, risate realistiche",
-        "style_guide": "Perculatorio, ironia diretta da bar, risate veloci (ahahah, hahahaha), zero emoji finte",
+        "description": "Prende per il culo, risate realistiche, 'manco con le mani'",
+        "style_guide": "Perculatorio, risate testuali (ahahah, hahahaha), zero emoji forzate",
         "min_words": 4,
         "max_words": 9,
         "delay_range": (25, 38),
         "sample_responses": [
             "questo gli esulta pure in faccia godo ahahahah",
             "ma dove cazzo voleva tirarlo ahahahah",
-            "tutti zitti adesso dai",
-            "manco con le mani la prendeva ahahah",
-            "incredibile come riescano sempre a rendersi ridicoli"
+            "manco con le mani segnano questi ahahah",
+            "ci riprova altre 10 volte va in curva ahahah",
+            "tutti zitti adesso dai pagliacci",
+            "staranno 3 mesi a piangere hahah"
         ]
     },
     4: {
@@ -66,8 +72,9 @@ PERSONAS = {
             "ovvio che mi segna contro al fanta sto maledetto",
             "ovvio mi ha bruciato la schedina sto cane",
             "assist confermato o l'hanno tolto?",
-            "messo in panca per sto paracarro godo",
-            "avevo l'over per colpa sua ho perso tutto"
+            "messo titolare al fanta per sto -3 godo",
+            "avevo l'over per colpa sua ho perso tutto",
+            "scamacca contro al fanta godoooooo"
         ]
     },
     5: {
@@ -86,7 +93,8 @@ PERSONAS = {
             "imbarazzante",
             "paracarro",
             "vabbè",
-            "finita"
+            "finita",
+            "ciao"
         ]
     }
 }

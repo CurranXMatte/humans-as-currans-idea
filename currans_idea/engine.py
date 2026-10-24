@@ -39,15 +39,14 @@ Genera solo la tua risposta, nient'altro:"""
         return prompt
 
     def simulate_mock_reactions(self, event_text):
-        # test simulazione locale
+        # test simulazione locale con campioni appresi dai 45.5k messaggi
         event_lower = event_text.lower()
         delays = self.get_delays()
         results = []
 
-        # check base parole chiave
-        is_goal = "gol" in event_lower or "rete" in event_lower
-        is_miss = "sbagliato" in event_lower or "errore" in event_lower or "palo" in event_lower or "fuori" in event_lower
-        is_card = "rosso" in event_lower or "espulso" in event_lower or "giallo" in event_lower
+        is_goal = any(w in event_lower for w in ["gol", "rete", "vantaggio", "segnato"])
+        is_miss = any(w in event_lower for w in ["sbagliato", "errore", "palo", "fuori", "parato"])
+        is_card = any(w in event_lower for w in ["rosso", "espulso", "giallo", "fallo", "var"])
 
         for pid in sorted(self.personas.keys()):
             p = self.personas[pid]
@@ -55,35 +54,92 @@ Genera solo la tua risposta, nient'altro:"""
 
             if pid == 1:
                 if is_goal:
-                    msg = random.choice(["SEEEEEEE PROPRIO LUI GODOOO", "MAMMA MIA CHE GIOCATORE SEEE", "GODOOOO FINALMENTE"])
+                    msg = random.choice([
+                        "SEEEEEEE PROPRIO LUI GODOOO",
+                        "MAMMA MIA CHE SQUADRA SEEE",
+                        "GODOOOO FINALMENTE",
+                        "CHE CAZZO DI GOL MAMMA MIA",
+                        "GODOOOOOOOOO"
+                    ])
                 elif is_miss:
-                    msg = random.choice(["NON CI CREDO MA COME SI FA DAI", "MA VAI A CAGARE VA", "IN POZZO SENZA FONDO NON CI CREDO"])
+                    msg = random.choice([
+                        "NON CI CREDO MA COME SI FA DAI",
+                        "MA VAI A CAGARE VA",
+                        "IN POZZO SENZA FONDO NON CI CREDO",
+                        "MA COME CAZZO L'HA TIRATO"
+                    ])
                 else:
-                    msg = random.choice(["NON CI CREDO", "MAMMA MIA", "MA CHE ROBA È"])
+                    msg = random.choice([
+                        "NON CI CREDO",
+                        "MAMMA MIA",
+                        "MA CHE ROBA È"
+                    ])
 
             elif pid == 2:
                 if is_goal:
-                    msg = random.choice(["difesa imbarazzante comunque dormivano tutti", "gol a culo tanto mo pareggiano", "non esaltatevi che fan cagare entrambi"])
+                    msg = random.choice([
+                        "difesa imbarazzante comunque dormivano tutti",
+                        "partita orrenda comunque vinta solo a culo",
+                        "tanto so già come va a finire",
+                        "non esaltatevi che fan cagare entrambi",
+                        "tanto mo pareggiano sicuro come al solito"
+                    ])
                 elif is_miss:
-                    msg = random.choice(["rigore osceno comunque giocatore pippissimo", "paracarro inutile come sempre", "non segna manco a porta vuota questo"])
+                    msg = random.choice([
+                        "rigore osceno comunque giocatore pippissimo",
+                        "paracarro inutile come sempre",
+                        "non segna manco a porta vuota questo",
+                        "che cesso di giocatore comunque"
+                    ])
                 else:
-                    msg = random.choice(["partita oscena comunque", "arbitro comprato sicuro"])
+                    msg = random.choice([
+                        "comunque una partita orrenda",
+                        "arbitro comprato sicuro come al solito",
+                        "il culo che hanno questi comunque clamoroso"
+                    ])
 
             elif pid == 3:
                 if is_goal:
-                    msg = random.choice(["questo gli esulta pure in faccia godo ahahahah", "tutti zitti adesso dai", "manco con le mani la prendeva ahahah"])
+                    msg = random.choice([
+                        "questo gli esulta pure in faccia godo ahahahah",
+                        "tutti zitti adesso dai pagliacci",
+                        "manco con le mani la prendeva ahahah",
+                        "staranno 3 mesi a piangere hahah"
+                    ])
                 elif is_miss:
-                    msg = random.choice(["ma dove cazzo voleva tirarlo ahahahah", "pallone sulla luna ahahah", "nemmeno su fifa uno scempio simile"])
+                    msg = random.choice([
+                        "ma dove cazzo voleva tirarlo ahahahah",
+                        "pallone sulla luna ahahah",
+                        "ci riprova altre 10 volte va in curva ahahah",
+                        "manco con le mani segnano questi ahahah"
+                    ])
                 else:
-                    msg = random.choice(["ma chi cazzo è questo ahahah", "pagliacci totali"])
+                    msg = random.choice([
+                        "ma chi cazzo è questo ahahah",
+                        "pagliacci totali ahahahah",
+                        "e dove va ahahah"
+                    ])
 
             elif pid == 4:
                 if is_goal:
-                    msg = random.choice(["ovvio che mi segna contro al fanta sto maledetto", "assist confermato o l'hanno tolto?", "ce l'ho contro porco dio"])
+                    msg = random.choice([
+                        "ovvio che mi segna contro al fanta sto maledetto",
+                        "assist confermato o l'hanno tolto?",
+                        "ce l'ho contro porco dio",
+                        "scamacca contro al fanta godoooooo"
+                    ])
                 elif is_miss:
-                    msg = random.choice(["ovvio mi ha bruciato la schedina sto cane", "messo titolare al fanta per sto -3", "ho perso la bolla per colpa sua"])
+                    msg = random.choice([
+                        "ovvio mi ha bruciato la schedina sto cane",
+                        "messo titolare al fanta per sto -3",
+                        "ho perso la bolla per colpa sua"
+                    ])
                 else:
-                    msg = random.choice(["fantacalcio distrutto per colpa sua", "quanto prende secondo voi?"])
+                    msg = random.choice([
+                        "fantacalcio distrutto per colpa sua",
+                        "quanto prende secondo voi?",
+                        "mi ha fatto saltare la schedina"
+                    ])
 
             elif pid == 5:
                 if is_goal:
@@ -91,7 +147,7 @@ Genera solo la tua risposta, nient'altro:"""
                 elif is_miss:
                     msg = random.choice(["che cesso", "paracarro", "imbarazzante"])
                 else:
-                    msg = random.choice(["vabbè", "imbarazzanti", "ciao"])
+                    msg = random.choice(["vabbè", "imbarazzante", "ciao"])
 
             cleaned = validate_and_clean(msg, pid, p["max_words"])
             results.append({

@@ -1,26 +1,27 @@
-# Humans as Curran's Idea (v2.0)
+# Humans as Curran's Idea (v2.1)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python: 3.9+](https://img.shields.io/badge/Python-3.9%2B-brightgreen.svg)](https://www.python.org/)
 
 **Humans as Curran's Idea** è un motore euristico e comportamentale progettato per generare risposte realistiche da parte di bot sotto i post di canali Telegram a tema calcistico e Fantacalcio.
 
-A differenza dei bot tradizionali (spesso rigidi, prolissi, con punteggiatura accademica e facilmente riconoscibili come IA), questo modello è stato calibrato analizzando **3.856 messaggi reali** di una vera community Telegram sportiva.
+A differenza dei bot tradizionali (spesso rigidi, prolissi, con punteggiatura accademica e facilmente riconoscibili come IA), questo modello è stato calibrato analizzando ed elaborando **45.566 messaggi reali** da oltre 900 utenti di una vera community Telegram sportiva (*Calcio Gruppo*).
 
 ---
 
-## 📊 I Numeri dell'Interazione Umana Reale
+## 📊 I Numeri dell'Interazione Umana Reale (Dataset da 45.566 Messaggi)
 
-L'analisi statistica condotta sui messaggi del gruppo ha evidenziato metriche chiave che sfatano i pattern tipici delle IA:
+L'analisi su vasta scala condotta sui messaggi del gruppo ha confermato e affinato le metriche cardine:
 
-| Metrica | Dati Reali del Gruppo | Regola dell'Algoritmo |
+| Metrica | Dati Reali del Gruppo (45.5k msgs) | Regola dell'Algoritmo |
 | :--- | :--- | :--- |
 | **Lunghezza Mediana** | **4 parole** | Brevità estrema: vietato generare temi o papiri. |
-| **Messaggi Ultra-Corti (1-3 parole)** | **45.2%** del totale | Circa metà delle reazioni deve contenere solo 1-3 parole. |
-| **Messaggi Medi (4-10 parole)** | **49.9%** del totale | Commenti secchi, battute o polemiche immediate. |
-| **Assenza di punto finale (`.`)** | **93.8%** dei messaggi | **Regola ferrea:** Nessun punto fermo a fine frase. |
-| **Inizio con lettera minuscola** | **46.1%** dei messaggi | Minuscole naturali da digitazione rapida da smartphone. |
-| **Distribuzione temporale** | 3s — 90s | I messaggi arrivano con jitter asincrono, mai in blocco. |
+| **Messaggi Ultra-Corti (1-3 parole)** | **43.1%** del totale | Quasi metà delle reazioni contiene solo 1-3 parole. |
+| **Messaggi Medi (4-10 parole)** | **40.7%** del totale | Commenti secchi, battute veloci o polemiche immediate. |
+| **Messaggi Telegrafici (1-2 parole)** | **>29%** (13.368 messaggi) | Giudizi tombali a caldo (*godo*, *che cesso*, *meritato*). |
+| **Assenza di punto finale (`.`)** | **90.7%** dei messaggi | **Regola ferrea:** Nessun punto fermo a fine frase. |
+| **Inizio con lettera minuscola** | **28.5%** dei messaggi | Minuscole naturali da digitazione rapida da smartphone. |
+| **Distribuzione temporale** | 2s — 90s | I messaggi arrivano con jitter asincrono, mai in blocco. |
 
 ---
 
@@ -40,23 +41,23 @@ flowchart TD
 
 1. **L'Emotivo di Pancia** *(delay: +2s - +6s | 2-6 parole)*  
    Reazione viscerale a caldo. Usa CAPS LOCK parziale o totale, punti esclamativi ed estasi/rabbia pura.  
-   *Esempio:* `SEEEEEEE PROPRIO LUI GODOOO` / `NON CI CREDO MA COME SI FA DAI`
+   *Esempi reali:* `SEEEEEEE PROPRIO LUI GODOOO` / `CHE CAZZO DI GOL MAMMA MIA` / `GODOOOOOOOOO`
 
 2. **Il Cinico Disfattista** *(delay: +12s - +22s | 4-8 parole)*  
-   Smonta l'evento, insulta il livello dei giocatori, prevede la beffa o critica la difesa. Rigorosamente tutto minuscolo.  
-   *Esempio:* `difesa del milan imbarazzante comunque dormivano tutti` / `rigore osceno comunque giocatore pippissimo`
+   Smonta l'evento, insulta il livello dei giocatori, parla di botte di culo o prevede la beffa. Rigorosamente tutto minuscolo.  
+   *Esempi reali:* `tanto so già come va a finire` / `partita orrenda comunque vinta solo a culo` / `difesa imbarazzante comunque dormivano tutti`
 
 3. **Il Troll / Sfottò** *(delay: +25s - +38s | 4-9 parole)*  
    Sbeffeggia tifosi avversari o singoli giocatori. Usa l'ironia cruda da stadio e risate testuali reali (`ahahah`).  
-   *Esempio:* `questo gli esulta pure in faccia godo ahahahah` / `ma dove cazzo voleva tirarlo ahahahah`
+   *Esempi reali:* `questo gli esulta pure in faccia godo ahahahah` / `manco con le mani segnano questi ahahah` / `ci riprova altre 10 volte va in curva ahahah`
 
 4. **L'Ossessionato da Fanta / Schedine** *(delay: +40s - +60s | 5-10 parole)*  
    Filtra ogni evento attraverso bonus, malus, panchine o schedine bruciate.  
-   *Esempio:* `ovvio mi ha bruciato la schedina sto cane` / `ovvio che mi segna contro al fanta sto maledetto`
+   *Esempi reali:* `ovvio mi ha bruciato la schedina sto cane` / `ovvio che mi segna contro al fanta sto maledetto` / `scamacca contro al fanta godoooooo`
 
 5. **Il Telegrafico** *(delay: +60s - +90s | 1-2 parole)*  
    Monosillabi o giudizi tombali a freddo.  
-   *Esempio:* `godo` / `che cesso` / `meritato` / `imbarazzante`
+   *Esempi reali:* `godo` / `che cesso` / `meritato` / `imbarazzante` / `paracarro`
 
 ---
 
@@ -71,23 +72,17 @@ Il modulo `validators.py` blocca preventivamente espressioni sintetiche o televi
 
 ## 🚀 Installazione & Utilizzo
 
-### 1. Clona il repository
 ```bash
-git clone https://github.com/<tuo-username>/humans-as-currans-idea.git
+git clone https://github.com/CurranXMatte/humans-as-currans-idea.git
 cd humans-as-currans-idea
-```
-
-### 2. Esegui il Playground Interattivo
-Non richiede dipendenze esterne pesanti (usa la libreria standard di Python):
-```bash
 python main.py
 ```
 
 Digita qualsiasi evento:
 ```text
-[Evento / Post Canale] > Gol inter contro il milan 1-0 calhanoglu
+[evento] > Gol inter contro il milan 1-0 calhanoglu
 
---- Simulazione risposte per: 'Gol inter contro il milan 1-0 calhanoglu' ---
+--- risposte per: 'Gol inter contro il milan 1-0 calhanoglu' ---
 [+4s] (L'Emotivo di Pancia)
        > SEEEEEEE PROPRIO LUI GODOOO
 
