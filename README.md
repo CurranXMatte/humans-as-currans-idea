@@ -1,9 +1,11 @@
 # Humans as Curran's Idea (v2.0)
 
-[![CI](https://github.com/CurranXMatte/humans-as-currans-idea/actions/workflows/ci.yml/badge.svg)](https://github.com/CurranXMatte/humans-as-currans-idea/actions)
+[![API Live](https://img.shields.io/badge/API-Online%20(Vercel)-success?logo=vercel)](https://humans-as-currans-idea.vercel.app/docs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+
+> 🚀 **API Pubblica Live h24 con Swagger UI:** [https://humans-as-currans-idea.vercel.app/docs](https://humans-as-currans-idea.vercel.app/docs)
 
 **Humans as Curran's Idea** è un motore euristico-comportamentale e una **REST API** progettata per simulare interazioni umane e realistiche sotto i post di canali Telegram sportivi (calcio, Serie A, Champions League e Fantacalcio).
 
