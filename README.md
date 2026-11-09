@@ -1,11 +1,23 @@
-# Humans as Curran's Idea (v2.2)
+# Humans as Curran's Idea (v2.0)
 
+[![CI](https://github.com/CurranXMatte/humans-as-currans-idea/actions/workflows/ci.yml/badge.svg)](https://github.com/CurranXMatte/humans-as-currans-idea/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python: 3.9+](https://img.shields.io/badge/Python-3.9%2B-brightgreen.svg)](https://www.python.org/)
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 
-**Humans as Curran's Idea** è un motore euristico e comportamentale progettato per generare risposte realistiche da parte di bot sotto i post di canali Telegram a tema calcistico e Fantacalcio.
+**Humans as Curran's Idea** è un motore euristico-comportamentale e una **REST API** progettata per simulare interazioni umane e realistiche sotto i post di canali Telegram sportivi (calcio, Serie A, Champions League e Fantacalcio).
 
-A differenza dei bot tradizionali (spesso rigidi, prolissi, con punteggiatura accademica e facilmente riconoscibili come IA), questo modello è stato calibrato analizzando ed elaborando **oltre 45 mila messaggi reali** da **oltre 1.240 utenti** di una vera community Telegram sportiva, e potenziato con un **Parser Semantico Intelligente per i Post di Canale** addestrato su oltre 1.400 post reali.
+A differenza dei bot tradizionali (spesso rigidi, prolissi, con punteggiatura accademica e facilmente riconoscibili come IA), questo modello è stato calibrato su **oltre 45.000 messaggi reali** da **oltre 1.240 utenti**, integra un **Parser Semantico Intelligente per i Post di Canale**, un motore di **Thread Multi-Turno bot-to-bot** e una **REST API con documentazione Swagger interattiva**.
+
+---
+
+## ⚡ Novità Versione 2.0
+
+1. **🌐 REST API completa (FastAPI + Swagger UI):** Endpoints per parsing, simulazione reazioni, e thread bot-to-bot con CORS abilitato (pronto per dashboard web o bot Telegram).
+2. **🧵 Thread Multi-Turno (Discussioni nei Commenti):** I bot non si limitano a commentare il post iniziale, ma si rispondono, si citano a vicenda e litigano tra archetipi psicologici.
+3. **🎲 Slot-Filling Combinatorio Dinamico (3.2M+ combinazioni):** Adattamento istantaneo a marcatore, assistman, squadre e minuto senza pattern ripetitivi.
+4. **🧪 Suite di Test Automatica & CI/CD:** 11 test unitari con `pytest` e GitHub Actions su Python 3.11, 3.12, 3.13.
+5. **☁️ Deploy Gratuito 24/7:** Configurazione pronta all'uso con `Dockerfile` e `render.yaml` per deployment istantaneo su Render.com o Hugging Face Spaces.
 
 ---
 
@@ -36,8 +48,6 @@ L'algoritmo non riceve più soltanto stringhe generiche, ma esamina i post compl
 
 ## 🎭 I 5 Archetipi Comportamentali
 
-Sotto ogni post del canale, il sistema attiva 5 personalità psicologiche distinte che commentano in modo coordinato ma indipendente:
-
 ```mermaid
 flowchart TD
     Post["Post Canale Telegram (Gol, Formazioni, News)"] --> Parser["ChannelPostParser (Estrazione Dati)"]
@@ -47,105 +57,130 @@ flowchart TD
     Engine --> P3["3. Il Troll / Sfottò (Banter / Ironico)"]
     Engine --> P4["4. L'Ossessionato da Fanta & Schedine"]
     Engine --> P5["5. Il Telegrafico (Minimalist)"]
+    P3 -.->|Sfottò / Risposta| P4
+    P1 -.->|Polemica / Risposta| P2
 ```
 
-1. **L'Emotivo di Pancia** *(delay: +2s - +6s | 2-6 parole)*  
-   Reazione viscerale a caldo.  
-   *Esempio reale:* `MAMMA MIA CHE GOL DI MBAPPÉ` / `SEEEEEEE PROPRIO LUI GODOOO`
+1. **L'Emotivo di Pancia** *(delay: +2s - +6s)*  
+   Reazione viscerale a caldo: caps lock, esclamativi.  
+   *Esempio:* `SEEEEEEE LAUTARO SEI UN FENOMENO GODO TROPPO`
 
-2. **Il Cinico Disfattista** *(delay: +12s - +22s | 4-8 parole)*  
-   Smonta l'azione, critica la difesa avversaria o prevede il pareggio. Tutto minuscolo.  
-   *Esempio reale:* `difesa dell'inter imbarazzante dormivano tutti` / `gol a culo comunque tanto mo pareggiano`
+2. **Il Cinico Disfattista** *(delay: +12s - +22s)*  
+   Smonta l'azione, disillusione totale, tutto minuscolo.  
+   *Esempio:* `difesa del milan imbarazzante dormivano tutti come al solito`
 
-3. **Il Troll / Sfottò** *(delay: +25s - +38s | 4-9 parole)*  
+3. **Il Troll / Sfottò** *(delay: +25s - +38s)*  
    Sbeffeggia tifosi avversari o singoli giocatori usando risate testuali reali (`ahahah`).  
-   *Esempio reale:* `nemmeno con le mani la prendevano ahahah` / `questo gli esulta pure in faccia godo ahahahah`
+   *Esempio:* `lautaro martinez li manda tutti a dormire ahahah muti`
 
-4. **L'Ossessionato da Fanta / Schedine** *(delay: +40s - +60s | 5-10 parole)*  
-   Verifica bonus dell'assistman o lamentele su rivali di lega.  
-   *Esempio reale:* `assist di diaz godo per il +1` / `ovvio che mi segna contro mbappé maledetto`
+4. **L'Ossessionato da Fanta / Schedine** *(delay: +40s - +60s)*  
+   Bonus, malus, panchine e schedine bruciate.  
+   *Esempio:* `ovvio che mi segna contro lautaro sto cane`
 
-5. **Il Telegrafico** *(delay: +60s - +90s | 1-2 parole)*  
-   Nome del marcatore o giudizio tombalo secco.  
-   *Esempio reale:* `mbappé` / `godo` / `meritato` / `imbarazzanti`
-
----
-
-## 🚫 Blacklist Anti-Rilevamento (The Heuristics)
-
-- **Bannati termini da commentatore TV / Boomer:** *"i cugini"*, *"la compagine"*, *"la dea"*, *"il biscione"*, *"il derby della madonnina"*, *"telefonatissimo"*, *"geometrico"*.
-- **Divieto di emoji forzate a fine frase** (tipico pattern da bot promozionale).
-- **Rimozione obbligatoria di punti finali** (`.`).
+5. **Il Telegrafico** *(delay: +60s - +90s)*  
+   Nome del marcatore o giudizio tombalo secco (1-2 parole).  
+   *Esempio:* `godo` / `meritato` / `paracarro`
 
 ---
 
-## 🚀 Installazione & Utilizzo
+## 🌐 REST API Endpoints
+
+Puoi avviare il server REST API locale con un solo comando:
+```bash
+python main.py --serve
+# oppure: uvicorn currans_idea.api:app --reload
+```
+La documentazione interattiva OpenAPI / Swagger sarà disponibile su: **`http://localhost:8000/docs`**
+
+### 1. `POST /api/v1/simulate`
+Simula le reazioni immediate dei 5 archetipi con delay temporali umani.
+```bash
+curl -X POST "http://localhost:8000/api/v1/simulate" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "GOAL! ⚽️ Lautaro Martinez ⏱️ 34'\'' Inter 🆚 Milan"}'
+```
+**Risposta:**
+```json
+{
+  "event_type": "GOAL",
+  "parsed_metadata": {
+    "scorer": "Lautaro Martinez",
+    "team_home": "Inter",
+    "team_away": "Milan",
+    "minute": "34'"
+  },
+  "reactions": [
+    {
+      "persona_id": 1,
+      "persona_name": "L'Emotivo di Pancia",
+      "delay_seconds": 3,
+      "message": "SEEEEEEE LAUTARO MARTINEZ SEI UN FENOMENO"
+    },
+    {
+      "persona_id": 2,
+      "persona_name": "Il Cinico Disfattista",
+      "delay_seconds": 18,
+      "message": "comunque la difesa del milan dorme in piedi tanto mo pareggiano"
+    }
+  ]
+}
+```
+
+### 2. `POST /api/v1/thread`
+Genera un thread multi-turno di commenti in cui le diverse persone si rispondono e si provocano a vicenda.
+```bash
+curl -X POST "http://localhost:8000/api/v1/thread" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "GOAL! ⚽️ Lautaro Martinez ⏱️ 34'\'' Inter 🆚 Milan", "max_replies": 3}'
+```
+
+### 3. `POST /api/v1/parse`
+Estrae le entità del post (squadre, marcatori, assist, minuto, punteggio, tipo di evento).
+
+---
+
+## 💻 Utilizzo da CLI
 
 ```bash
-git clone https://github.com/CurranXMatte/humans-as-currans-idea.git
-cd humans-as-currans-idea
+# Modalità interattiva (incolla post multilinea)
 python main.py
-```
 
-Puoi incollare direttamente un intero post copiato da Telegram:
-```text
-[Incolla il post o evento (premi INVIO due volte per inviare, o 'exit')]
-GOAL! ⚽️
-#ChampionsLeague 🏆
-🇪🇸 Real Madrid 🆚 Inter ⚫️
-1-0
-⚽️ Mbappé K.
-👟 Diaz B.
-⏱️ 14’
+# Simulazione rapida di un post
+python main.py --post "GOAL! ⚽️ Vlahovic ⏱️ 12' Juventus 🆚 Lazio"
 
---- RISPOSTE SIMULATE PER IL POST ---
-[+5s] (L'Emotivo di Pancia)
-       > MAMMA MIA CHE GOL DI MBAPPÉ
+# Simulazione di una discussione bot-to-bot (Thread multi-turno)
+python main.py --thread "GOAL! ⚽️ Leao ⏱️ 88' Milan 🆚 Roma"
 
-[+19s] (Il Cinico Disfattista)
-       > difesa del'inter imbarazzante dormivano tutti
-
-[+26s] (Il Troll / Sfottò)
-       > nemmeno con le mani la prendevano ahahah
-
-[+47s] (L'Ossessionato da Fanta / Schedine)
-       > assist di diaz godo per il +1
-
-[+81s] (Il Telegrafico)
-       > godo
+# Avvio del server API
+python main.py --serve --port 8000
 ```
 
 ---
 
-## ⚡ Capacità Generativa & Stress Test (500.001 Messaggi Unici)
-L'algoritmo integra un motore combinatorio avanzato validato su un ciclo di **500.001 messaggi unici generati e testati**:
-- **Messaggi unici testati:** 500.001
-- **Violazioni di stile (punteggiatura, blacklist, lunghezze):** 0
-- **Conformità euristiche umane:** 100.0%
+## ☁️ Deploy Gratuito su Render.com (in 2 minuti)
+
+1. Crea un account gratuito su [Render.com](https://render.com).
+2. Clicca su **New +** > **Web Service**.
+3. Collega il tuo repository GitHub `CurranXMatte/humans-as-currans-idea`.
+4. Render rileverà in automatico il file `render.yaml` e configurerà:
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn currans_idea.api:app --host 0.0.0.0 --port $PORT`
+5. Clicca su **Create Web Service**: la tua API sarà online con HTTPS gratuito h24 all'indirizzo `https://humans-as-currans-idea.onrender.com/docs`!
 
 ---
 
-## 📁 Struttura del Progetto
+## 🧪 Esecuzione dei Test Unitari
 
-```text
-humans-as-currans-idea/
-├── README.md               # Documentazione completa
-├── LICENSE                 # Licenza MIT
-├── requirements.txt        # Dipendenze
-├── .gitignore              # Protezione dati personali ed export chat
-├── main.py                 # Playground interattivo con supporto post multiriga
-└── currans_idea/
-    ├── __init__.py
-    ├── channel_parser.py   # Parser intelligente per i post del canale (gol, assist, formazioni)
-    ├── engine.py           # Core engine contestuale con jitter temporale
-    ├── personas.py         # Configurazione dei 5 profili psicologici
-    └── validators.py       # Filtri anti-rilevamento e blacklist linguistica
+```bash
+pytest -v tests/
 ```
+
+Tutti gli 11 test unitari coprono parsing, euristiche, thread ad albero e chiamate API FastAPI.
 
 ---
 
 ## 🛡️ Privacy & GDPR Notice
-Questo repository **non contiene né traccia** alcun dato personale, numero di telefono o archivio di messaggi grezzi esportati da Telegram. Tutti gli export e i file JSON sono inclusi nel file `.gitignore`.
+Questo repository **non contiene né traccia** alcun dato personale, numero di telefono o archivio di messaggi grezzi esportati da Telegram. Tutti gli export e i file JSON sono protetti nel file `.gitignore`.
 
 ---
 

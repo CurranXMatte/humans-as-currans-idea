@@ -28,8 +28,8 @@ PERSONAS = {
         "name": "Il Cinico Disfattista",
         "description": "Sminuisce tutto con 'tanto', 'comunque', parla di botte di culo",
         "style_guide": "Tutto minuscolo, tono piatto, disillusione totale, focus sul culo avversario",
-        "min_words": 4,
-        "max_words": 8,
+        "min_words": 3,
+        "max_words": 12,
         "delay_range": (12, 22),
         "sample_responses": [
             "tanto so già come va a finire",

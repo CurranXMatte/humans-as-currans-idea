@@ -37,10 +37,22 @@ class ChannelPostParser:
             data["competition"] = "Serie A"
             
         # 2. Squadre (Flag Team 🆚 Team Flag)
-        teams_m = re.search(r'[^\w\n]*([A-Za-z0-9\s]+?)\s*🆚\s*([A-Za-z0-9\s]+?)(?:[\n⚫️🔵🔴⚪️🟡🟣]|$)', post_text)
-        if teams_m:
-            data["team_home"] = teams_m.group(1).strip()
-            data["team_away"] = teams_m.group(2).strip()
+        if "🆚" in post_text:
+            parts = post_text.split("🆚")
+            before = parts[0].strip().split("\n")[-1]
+            after = parts[1].strip().split("\n")[0]
+
+            tokens = re.split(r'[\n⚽️👟⏱️🚑🔴⚫️🔵⚪️🟡🟣!?:;\'"’\-]', before)
+            non_empty = [t.strip() for t in tokens if t.strip()]
+            home_raw = non_empty[-1] if non_empty else before
+            m_home = re.findall(r'[A-Za-zÀ-ÿ0-9]+', home_raw)
+            if m_home:
+                data["team_home"] = " ".join(m_home)
+
+            after_clean = re.split(r'#|\d+\s*-\s*\d+|[\n⚽️👟⏱️🚑🔴⚫️🔵⚪️🟡🟣!?:;\'"’\-]', after)[0]
+            m_away = re.findall(r'[A-Za-zÀ-ÿ0-9]+', after_clean)
+            if m_away:
+                data["team_away"] = " ".join(m_away)
             
         # 3. Classificazione tipo di post
         if "GOAL!" in upper or "GOL!" in upper:
@@ -77,9 +89,8 @@ class ChannelPostParser:
             data["type"] = "DISALLOWED"
         elif "COMUNICATO UFFICIALE" in upper or "🚑" in post_text or any(k in post_text.lower() for k in ["trauma", "lesione", "crociato", "distorsivo"]):
             data["type"] = "INJURY"
-            # cerca nome giocatore se presente
-            doc_m = re.search(r'(?:comunicato che|ufficiale\s*:?|nei confronti di)\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)', post_text)
+            doc_m = re.search(r'(?:comunicato che|ufficiale\s*:?|nei confronti di|infortunio a|infortunio per|lesione per|per|di)\s+([A-ZÀ-ÿ][a-zà-ÿ]+(?:\s+[A-ZÀ-ÿ][a-zà-ÿ]+)?)', post_text)
             if doc_m:
-                data["player"] = doc_m.group(1)
+                data["player"] = doc_m.group(1).strip()
                 
         return data

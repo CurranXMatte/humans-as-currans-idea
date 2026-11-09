@@ -29,6 +29,7 @@ ENV/
 *.json
 *.html
 *.txt
+!requirements.txt
 *.csv
 *.zip
 ChatExport*

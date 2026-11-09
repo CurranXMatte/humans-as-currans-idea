@@ -37,17 +37,24 @@ def validate_banned_words(text):
             return False
     return True
 
-# todo: rivedere lunghezza max per il cinico
+HANGING_WORDS = {
+    "in", "di", "a", "da", "con", "su", "per", "tra", "fra",
+    "il", "lo", "la", "i", "gli", "le", "un", "uno", "una",
+    "che", "e", "ma", "o", "del", "dello", "della", "dei", "degli", "delle", "al", "allo", "alla", "ai", "agli", "alle"
+}
+
 def validate_and_clean(text, persona_id, max_words):
     text = clean_trailing_punctuation(text)
     
     if not validate_banned_words(text):
-        # da gestire meglio l'eccezione
         raise ValueError(f"bloccato per parole cringe: {text}")
         
     words = text.split()
     if len(words) > max_words:
-        text = " ".join(words[:max_words])
+        truncated = words[:max_words]
+        while truncated and truncated[-1].lower() in HANGING_WORDS:
+            truncated.pop()
+        text = " ".join(truncated)
         text = clean_trailing_punctuation(text)
         
     return text

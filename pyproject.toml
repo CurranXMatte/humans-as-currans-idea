@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "humans-as-currans-idea"
+version = "2.0.0"
+description = "Behavioral & heuristic simulation engine and REST API for Telegram football communities."
+readme = "README.md"
+authors = [
+    { name = "Curran", email = "canalecurran@gmail.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.0.0",
+    "colorama>=0.4.6",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+currans-idea = "main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["currans_idea"]
