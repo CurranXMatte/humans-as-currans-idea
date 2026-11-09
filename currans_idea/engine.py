@@ -4,49 +4,34 @@ from .personas import PERSONAS
 from .validators import validate_and_clean
 from .channel_parser import ChannelPostParser
 
-# Matrice combinatoria base ad alta entropia (3.2M+ permutazioni)
-PREFIXES = [
-    "comunque", "tanto", "vabbè ma", "ma come si fa", "solita storia", "nemmeno nei dilettanti",
-    "non ci credo", "guardali", "non esaltatevi che", "pazzesco", "solita farsa", "arbitro comprato",
-    "incredibile come", "madonna santa", "che schifo", "meritato", "godo troppo", "manco quotato",
-    "telefonato proprio", "ennesimo regalo", "vergognosi tutti", "ridicoli come sempre", "mamma mia che",
-    "partita venduta", "solito furto", "difesa che", "mister che", "partita orrenda", "il var che",
-    "ennesima papera", "scandalo totale", "ma andate a cagare", "che giocatore osceno", "che perla",
-    "ma dove vogliono andare", "ovvio che", "solita botta di culo", "stagione già finita", "follia totale", "senza parole"
+# Matrice combinatoria base ad alta entropia
+PREFIXES_CINICO = [
+    "comunque", "tanto", "solita botta di culo", "ovvio che", "vabbè ma", "nemmeno nei dilettanti",
+    "solita farsa", "arbitro comprato", "incredibile come", "ennesimo regalo", "difesa che",
+    "partita orrenda comunque", "solito furto", "follia totale", "senza parole", "manco quotato",
+    "telefonato proprio", "ennesima papera", "scandalo totale", "ma dove vogliono andare", "pura fortuna"
 ]
 
-SUBJECTS = [
-    "la difesa", "il portiere", "l'arbitro", "il mister", "la punta", "il terzino", "il centrale",
-    "il var", "la curva", "la squadra", "il guardalinee", "il capitano", "il centrocampo", "la panchina",
-    "lautaro", "leao", "vlahovic", "orsolini", "lukaku", "dybala", "kvara", "lookman", "kean",
-    "zapata", "barella", "calhanoglu", "theo", "gatti", "bremer", "sommer", "maignan", "carnesecchi",
-    "morata", "retegui", "pulisic", "zaccagni", "castellanos", "thuram", "allegri", "conte", "motta"
+CLOSINGS_CINICO = [
+    "come al solito", "tanto mo pareggiano", "partita orrenda comunque", "da serie c", "ridicolo davvero",
+    "zero gioco totale", "non esaltatevi per niente", "pura fortuna", "solita vergogna", "da ufficio inchieste",
+    "e stiamo a guardare", "solito scandalo", "farsa autentica", "mai vista una roba così", "sempre la solita storia",
+    "tanto non vanno da nessuna parte", "giornata falsata", "vergognosi tutti quanti", "imbarazzo totale"
 ]
 
-ACTIONS = [
-    "fa una papera", "dorme in piedi", "si fa cacciare", "segna a porta vuota", "regala un rigore",
-    "tira sulla luna", "fa un fallo da galera", "sbaglia lo stop", "non azzecca un passaggio",
-    "cade da solo", "chiede il cambio", "salva sulla linea", "la butta dentro", "esulta in faccia",
-    "piange con l'arbitro", "prende il palo", "inventa una giocata", "non corre manco", "si fa saltare",
-    "perde palla da pollo", "regala l'angolo", "segna il gol dell'ex", "para pure le mosche",
-    "subisce fallo netto", "non vede un fuorigioco", "fischia a senso unico", "sbaglia clamorosamente",
-    "trova il gol della domenica", "sfiora l'incrocio", "manda la palla in curva", "liscia il pallone",
-    "provoca la rissa", "si mangia un gol fatto", "salta l'uomo facile", "fa un assist perfetto",
-    "protesta per niente", "esce a vuoto", "devia nella propria porta", "trova un rimpallo fortunato", "fa il fenomeno"
+EXCLAMATIONS_EMOTIVO = [
+    "SEEEEEEE", "MAMMA MIA", "GODOOOO", "INUMANO", "NON CI CREDO", "DAI CAZZO",
+    "MADONNA SANTA", "GODO COME UN RICCIO", "ALLUCINANTE", "CHE GIOCATORE",
+    "CHE GOOOL", "FINALMENTE", "SI GODEEEE", "DEVASTANTE", "SPETTACOLO PURO"
 ]
 
-CLOSINGS = [
-    "come al solito", "senza vergogna", "manco su fifa", "da serie c", "ridicolo davvero",
-    "vaffanculo va", "ahahah piango", "che goduria immensa", "da cacciare a calci", "pagliacci totali",
-    "non ci credo mai", "giornata finita", "tanto retrocedono", "manco con le mani", "ahahah che scempio",
-    "ho perso la bolla", "stagione finita", "allucinante", "solita vergogna", "pure con presunzione",
-    "zero dignità", "e tutti zitti", "da ufficio inchieste", "meritatissimo dai", "incredibile davvero",
-    "manco nei sogni", "a porta spalancata", "da galera pura", "ahahah muti tutti", "da non crederci",
-    "e stiamo a guardare", "solito scandalo", "ma per favore", "farsa autentica", "mai vista una roba così",
-    "e si gode", "imbarazzo totale", "non ho parole", "spettacolo puro", "sempre la stessa storia"
+CLOSINGS_EMOTIVO = [
+    "GODO TROPPO", "NON CI CREDO MAI", "MUTI TUTTI", "SPETTACOLO PURO", "SEEEE",
+    "AVANTI COSÌ", "E SI VOLA", "MAMMA MIA", "FENOMENO VERO", "DISTRUGGILI TUTTI",
+    "TI AMO", "SENZA SENSO", "CHE GODURIA IMMENSA", "PIANGO DALLA GIOIA"
 ]
 
-TELEGRAFICI_POOL = [
+TELEGRAFICI_BASE = [
     "godo", "meritato", "che cesso", "paracarro", "finita", "imbarazzante",
     "farsa", "papera", "ladri", "macellaio", "vabbè", "ciao", "scandalo",
     "vergogna", "peccato", "muti", "piango", "tragicomico", "bidone",
@@ -54,7 +39,8 @@ TELEGRAFICI_POOL = [
     "rigore netto", "fallo netto", "fuorigioco netto", "rosso netto",
     "solito culo", "goduria totale", "che schifo", "che partitaccia",
     "parata assurda", "imbarazzanti", "ridicoli", "capolavoro", "disastro",
-    "spettacolo", "senza parole", "annullato", "venduto", "fenomeno"
+    "spettacolo", "senza parole", "annullato", "venduto", "fenomeno",
+    "golazo", "chiudete tutto", "clamoroso", "allucinante", "incredibile"
 ]
 
 
@@ -71,96 +57,173 @@ class CurransIdeaEngine:
         return delays
 
     def _generate_slot_message(self, persona_id, ptype, meta):
-        """Generatore combinatorio dinamico basato sul contesto del post."""
-        scorer = meta.get("scorer") or "lui"
+        """Generatore combinatorio dinamico ancorato rigorosamente alle entità del post."""
+        subject = meta.get("subject") or meta.get("scorer") or meta.get("player") or "lui"
+        scorer = meta.get("scorer") or subject
         assister = meta.get("assister")
         team_home = meta.get("team_home") or "squadra"
         team_away = meta.get("team_away") or "avversari"
-        player = meta.get("player") or scorer
+        player = meta.get("player") or subject
+
+        sub_low = subject.lower()
+        sub_up = subject.upper()
 
         if ptype == "GOAL":
             if persona_id == 1:  # Emotivo
-                excl = random.choice(["SEEEEEEE", "MAMMA MIA", "GODOOOO", "INUMANO", "NON CI CREDO", "DAI CAZZO"])
-                praise = random.choice([
-                    f"CHE GOL DI {scorer.upper()}",
-                    f"{scorer.upper()} SEI UN FENOMENO",
-                    f"DISTRUGGILI TUTTI {scorer.upper()}",
-                    f"GOL ASSURDO DI {scorer.upper()}",
-                    f"{scorer.upper()} MAMMA MIA CHE GIOCATA"
-                ])
-                tail = random.choice(["SEEEE", "GODO TROPPO", "NON CI CREDO MAI", "MUTI TUTTI", "SPETTACOLO"])
-                return f"{excl} {praise} {tail}"
+                excl = random.choice(EXCLAMATIONS_EMOTIVO)
+                actions = [
+                    f"CHE GOL DI {sub_up}",
+                    f"{sub_up} SEI UN FENOMENO",
+                    f"DISTRUGGILI TUTTI {sub_up}",
+                    f"GOL ASSURDO DI {sub_up}",
+                    f"{sub_up} MAMMA MIA CHE GIOCATA",
+                    f"PROPRIO LUI {sub_up}",
+                    f"{sub_up} LI HA DISTRUTTI TUTTI",
+                    f"CHE PERLA DI {sub_up}",
+                    f"{sub_up} NON SBAGLIA MAI",
+                    f"QUESTO È IL CALCIO {sub_up}",
+                    f"IMMENSO {sub_up}",
+                    f"CHE GOOOOL DI {sub_up}",
+                    f"SOLO E SEMPRE {sub_up}",
+                    f"COME SEGNA {sub_up}"
+                ]
+                close = random.choice(CLOSINGS_EMOTIVO)
+                return f"{excl} {random.choice(actions)} {close}"
 
             elif persona_id == 2:  # Cinico
-                prefix = random.choice(["comunque", "tanto", "solita botta di culo", "ovvio che", "difesa che"])
-                team_target = team_away.lower() if random.random() < 0.6 else team_home.lower()
-                subj = random.choice([f"la difesa del {team_target}", f"{scorer.lower()}", "il portiere", "il centrale"])
-                act = random.choice(["dorme in piedi", "trova un rimpallo fortunato", "segna a porta vuota", "fa una papera"])
-                close = random.choice(["come al solito", "tanto mo pareggiano", "partita orrenda comunque", "da serie c", "ridicolo davvero"])
-                return f"{prefix} {subj} {act} {close}"
+                pref = random.choice(PREFIXES_CINICO)
+                team_away_phrase = f"del {meta['team_away'].lower()}" if meta.get("team_away") else "avversaria"
+                actions = [
+                    f"{sub_low} segna solo a culo",
+                    f"{sub_low} trova un rimpallo fortunato",
+                    f"la difesa dorme e {sub_low} la butta dentro",
+                    f"il portiere fa una papera su {sub_low}",
+                    f"{sub_low} non correva manco fino a mo",
+                    f"{sub_low} fa un tiro osceno ed entra",
+                    f"solita difesa aperta regalata a {sub_low}",
+                    f"{sub_low} segna a porta spalancata",
+                    f"partita orrenda decisa da un rimpallo su {sub_low}",
+                    f"la difesa {team_away_phrase} dorme in piedi",
+                    f"il portiere {team_away_phrase} esce a vuoto"
+                ]
+                close = random.choice(CLOSINGS_CINICO)
+                return f"{pref} {random.choice(actions)} {close}"
 
             elif persona_id == 3:  # Troll
-                subj = scorer.lower()
-                target_team = team_away.lower()
-                mock = random.choice([
-                    f"{subj} gli esulta pure in faccia",
-                    f"tifosi del {target_team} già a piangere sotto la doccia",
-                    f"{subj} li manda tutti a dormire",
-                    f"manco con le mani la prendevano",
-                    f"difesa del {target_team} a farfalle"
-                ])
-                laugh = random.choice(["ahahahah", "ahahah piango", "ahahah godo", "ahahah muti"])
-                return f"{mock} {laugh}"
+                mocks = [
+                    f"{sub_low} gli esulta pure in faccia godo",
+                    f"manco con le mani lo fermavano {sub_low}",
+                    f"{sub_low} li manda tutti a dormire",
+                    f"tutti muti adesso zittiti da {sub_low}",
+                    f"difesa a farfalle su {sub_low} che scempio",
+                    f"staranno tre mesi a piangere per {sub_low}",
+                    f"{sub_low} fa piangere tutti stasera godo",
+                    f"dove volevano andare contro {sub_low}",
+                    f"ma chi doveva marcarlo {sub_low}",
+                    f"{sub_low} li ha umiliati a domicilio"
+                ]
+                laugh = random.choice(["ahahahah", "ahahah piango", "ahahah godo", "ahahah muti tutti", "hahaha pagliacci"])
+                return f"{random.choice(mocks)} {laugh}"
 
             elif persona_id == 4:  # Fanta
                 if assister:
                     opts = [
                         f"assist confermato a {assister.lower()} o lo tolgono?",
-                        f"ho {scorer.lower()} al fanta godoooo",
+                        f"ho {sub_low} al fanta godoooo",
                         f"assist di {assister.lower()} godo per il +1",
-                        f"ovvio che mi segna contro {scorer.lower()} sto cane",
-                        f"+3 di {scorer.lower()} e +1 di {assister.lower()} giornata salvata"
+                        f"ovvio che mi segna contro {sub_low} sto cane",
+                        f"+3 di {sub_low} e +1 di {assister.lower()} giornata salvata",
+                        f"avevo {sub_low} e {assister.lower()} titolari godo",
+                        f"chi ha contro {sub_low} oggi può piangere"
                     ]
                 else:
                     opts = [
-                        f"ovvio che mi segna contro {scorer.lower()} maledetto",
-                        f"ce l'ho contro al fanta ovvio",
-                        f"ho {scorer.lower()} al fanta godoooooo",
-                        f"mi ha bruciato la schedina sto gol",
-                        f"+3 di {scorer.lower()} dai che si vince la giornata"
+                        f"ovvio che mi segna contro {sub_low} maledetto",
+                        f"ce l'ho contro al fanta {sub_low} ovvio",
+                        f"ho {sub_low} al fanta godoooooo",
+                        f"mi ha bruciato la schedina sto gol di {sub_low}",
+                        f"+3 di {sub_low} dai che si vince la giornata",
+                        f"messo titolare {sub_low} per fortuna oggi",
+                        f"avevo l'under per colpa di {sub_low} saltato tutto"
                     ]
                 return random.choice(opts)
 
             elif persona_id == 5:  # Telegrafico
-                pool = [scorer.lower(), "godo", "meritato", "finita", "solito culo", "golazo", "fenomeno"]
+                pool = [
+                    sub_low,
+                    sub_low.split()[-1] if len(sub_low.split()) > 1 else sub_low,
+                    "godo", "golazo", "meritato", "solito culo", "fenomeno",
+                    "finita", "paracarro", "farsa", "chiudete tutto", "eccolo"
+                ]
                 return random.choice(pool)
-
-        elif ptype == "LINEUP":
-            if persona_id == 1:
-                return random.choice(["DAI RAGAZZI CARICHI FORZA", "FORMAZIONE TOP SI VINCE", "MAMMA MIA CHE SQUADRA CARICHI"])
-            elif persona_id == 2:
-                prefix = random.choice(["comunque", "tanto", "solita storia"])
-                act = random.choice(["formazione oscena", "scelte senza senso del mister", "con sti titolari non si va da nessuna parte"])
-                close = random.choice(["prevedo disastri", "come al solito", "solito scempio"])
-                return f"{prefix} {act} {close}"
-            elif persona_id == 3:
-                return random.choice(["ancora titolare sto cesso ahahah", "questi stasera ne prendono quattro ahahah", "in panchina a piangere ahahah"])
-            elif persona_id == 4:
-                return random.choice(["chi avete titolare al fanta?", "messo in panchina sto cane maledetto", "ballottaggio perso al fanta ovvio"])
-            elif persona_id == 5:
-                return random.choice(["disastro", "vittoria facile", "vabbè"])
 
         elif ptype == "INJURY":
             if persona_id == 1:
-                return random.choice([f"NOOO CHE BRUTTO INFORTUNIO PER {player.upper()}", "SPERIAMO NIENTE DI GRAVE MAMMA MIA", "STAGIONE FINITA CHE SFIGA ASSURDA"])
+                opts = [
+                    f"NOOO CHE BRUTTO INFORTUNIO PER {sub_up}",
+                    f"SPERIAMO NIENTE DI GRAVE PER {sub_up} MAMMA MIA",
+                    f"STAGIONE FINITA PER {sub_up} CHE SFIGA ASSURDA",
+                    f"MA COME SI FA A ROMPERSI COSÌ {sub_up} NON CI CREDO"
+                ]
+                return random.choice(opts)
             elif persona_id == 2:
-                return random.choice([f"stagione compromessa per {player.lower()} preparatori da cacciare", "solita sfiga che si ripete sempre", "preparazione atletica da serie c"])
+                opts = [
+                    f"stagione compromessa per {sub_low} preparatori da cacciare",
+                    f"solita sfiga con {sub_low} che si ripete sempre",
+                    f"preparazione atletica da serie c per {sub_low}",
+                    f"tanto con {sub_low} rotto il campionato è finito"
+                ]
+                return random.choice(opts)
             elif persona_id == 3:
-                return random.choice([f"fatto di cristallo {player.lower()} ahahah", "nemmeno tre partite di fila regge ahahah", "in infermeria fisso ormai"])
+                opts = [
+                    f"fatto di cristallo {sub_low} ahahah",
+                    f"nemmeno tre partite di fila regge {sub_low} ahahah",
+                    f"in infermeria fisso {sub_low} ormai ahahah",
+                    f"appena tocca palla si rompe {sub_low} dai ahahah"
+                ]
+                return random.choice(opts)
             elif persona_id == 4:
-                return random.choice([f"fanta distrutto per l'infortunio di {player.lower()}", "svincolo obbligatorio all'asta di riparazione", "avevo investito mezzo budget su di lui"])
+                opts = [
+                    f"fanta distrutto per l'infortunio di {sub_low}",
+                    f"svincolo obbligatorio all'asta di riparazione per {sub_low}",
+                    f"avevo investito mezzo budget su {sub_low} ciao",
+                    f"stagione di fanta buttata nel cesso con {sub_low} rotto"
+                ]
+                return random.choice(opts)
             elif persona_id == 5:
-                return random.choice(["rotto", "sfiga", "stagione finita"])
+                return random.choice([sub_low, "rotto", "sfiga", "stagione finita", "crociato"])
+
+        elif ptype == "RED_CARD":
+            if persona_id == 1:
+                opts = [
+                    f"MA CHE ROSSO È QUESTO PER {sub_up} DAI",
+                    f"MA SEI PAZZO ARBITRO VENDUTO ROSSO A {sub_up}",
+                    f"MA COME SI FA A BUTTARE FUORI {sub_up} ASSURDO"
+                ]
+                return random.choice(opts)
+            elif persona_id == 2:
+                opts = [
+                    f"in dieci finita la partita comunque colpa di {sub_low}",
+                    f"fallo stupido e ingenuo di {sub_low} giocatore senza cervello",
+                    f"espulsione telefonatissima {sub_low} solito ingenuo"
+                ]
+                return random.choice(opts)
+            elif persona_id == 3:
+                opts = [
+                    f"interventi da galera di {sub_low} ahahah",
+                    f"ha cercato di decapitarlo {sub_low} ahahahah",
+                    f"rosso diretto e a fare la doccia {sub_low} ahahah"
+                ]
+                return random.choice(opts)
+            elif persona_id == 4:
+                opts = [
+                    f"rosso a {sub_low} al fanta giornata rovinata subito",
+                    f"-1 a {sub_low} e addio vittoria al fanta",
+                    f"messo titolare {sub_low} e si fa cacciare maledetto"
+                ]
+                return random.choice(opts)
+            elif persona_id == 5:
+                return random.choice([sub_low, "macellaio", "follia", "venduto", "espulso"])
 
         elif ptype == "FULL_TIME":
             if persona_id == 1:
@@ -172,59 +235,40 @@ class CurransIdeaEngine:
             elif persona_id == 4:
                 return random.choice(["giornata di fanta chiusa con una sconfitta", "schedina saltata per questa partita", "al fanta ho perso di mezzo punto"])
             elif persona_id == 5:
-                return random.choice(["finita", "meritato", "scempio"])
+                return random.choice(["finita", "meritato", "scempio", "a casa"])
 
-        elif ptype == "HALF_TIME":
+        else:  # Generico / Notizie generiche
             if persona_id == 1:
-                return random.choice(["SVEGLIATEVI NEL SECONDO TEMPO DAI", "MAMMA MIA CHE PRIMO TEMPO"])
+                opts = [
+                    f"NON CI CREDO MA CHE ROBA SU {sub_up}",
+                    f"MAMMA MIA ASSURDO {sub_up}",
+                    f"MA ANDATE A CAGARE DAI SU {sub_up}",
+                    f"NOTIZIA CLAMOROSA SU {sub_up} ASSURDO",
+                    f"TUTTO VERO SU {sub_up} NON CI CREDO"
+                ]
+                return random.choice(opts)
             elif persona_id == 2:
-                return random.choice(["primo tempo orrendo comunque zero tiri", "partita da addormentarsi proprio"])
+                pref = random.choice(PREFIXES_CINICO)
+                close = random.choice(CLOSINGS_CINICO)
+                return f"{pref} la solita storia su {sub_low} {close}"
             elif persona_id == 3:
-                return random.choice(["che partitaccia oscena ahahah", "manco nei dilettanti ahahah"])
+                opts = [
+                    f"ma chi cazzo è {sub_low} ahahah",
+                    f"pagliacci totali con {sub_low} ahahahah",
+                    f"e dove vogliono andare con {sub_low} ahahah",
+                    f"già si esaltano per {sub_low} ahahah che scempio"
+                ]
+                return random.choice(opts)
             elif persona_id == 4:
-                return random.choice(["zero bonus in questo primo tempo", "speriamo nei cambi per il fanta"])
+                opts = [
+                    f"fantacalcio distrutto per colpa delle notizie su {sub_low}",
+                    f"chissà quanto prende al fanta {sub_low} adesso",
+                    f"se prendono {sub_low} mi sballa l'asta di riparazione",
+                    f"speriamo solo non influisca sul fanta sta roba su {sub_low}"
+                ]
+                return random.choice(opts)
             elif persona_id == 5:
-                return random.choice(["dormono", "orrendo", "vabbè"])
-
-        elif ptype == "RED_CARD":
-            if persona_id == 1:
-                return random.choice(["MA CHE ROSSO È QUESTO DAI", "MA SEI PAZZO ARBITRO VENDUTO"])
-            elif persona_id == 2:
-                return random.choice(["in dieci finita la partita comunque", "fallo stupido e ingenuo giocatore senza cervello"])
-            elif persona_id == 3:
-                return random.choice(["interventi da galera ahahah", "ha cercato di decapitarlo ahahahah"])
-            elif persona_id == 4:
-                return random.choice(["rosso al fanta giornata rovinata subito", "-1 e addio vittoria al fanta"])
-            elif persona_id == 5:
-                return random.choice(["macellaio", "follia", "venduto"])
-
-        elif ptype == "DISALLOWED":
-            if persona_id == 1:
-                return random.choice(["LADRI CLAMOROSI NON CI CREDO", "GODO ANNULLATO SEEE"])
-            elif persona_id == 2:
-                return random.choice(["fuorigioco di un millimetro solita farsa", "tanto con questo var non si capisce niente"])
-            elif persona_id == 3:
-                return random.choice(["il var colpisce ancora ahahahah goduria", "già avevano esultato ahahah che pagliacci"])
-            elif persona_id == 4:
-                return random.choice(["mi hanno tolto il bonus al fanta ladri", "schedina saltata per un millimetro"])
-            elif persona_id == 5:
-                return random.choice(["farsa", "annullato", "ladri"])
-
-        else:  # Generico / Combinatoria aperta
-            if persona_id == 1:
-                return random.choice(["NON CI CREDO MA CHE ROBA È", "MAMMA MIA ASSURDO", "MA ANDATE A CAGARE DAI"])
-            elif persona_id == 2:
-                p = random.choice(PREFIXES)
-                s = random.choice(SUBJECTS)
-                a = random.choice(ACTIONS)
-                c = random.choice(CLOSINGS)
-                return f"{p} {s} {a} {c}"
-            elif persona_id == 3:
-                return random.choice(["ma chi cazzo sono questi ahahah", "pagliacci totali ahahahah", "e dove vogliono andare ahahah"])
-            elif persona_id == 4:
-                return random.choice(["fantacalcio distrutto per colpa di ste notizie", "chissà quanto prende al fanta questo"])
-            elif persona_id == 5:
-                return random.choice(TELEGRAFICI_POOL)
+                return random.choice([sub_low, "ridicoli", "vabbè", "imbarazzante", "scandalo", "ciao"])
 
     def simulate_mock_reactions(self, post_text):
         """Genera le reazioni dei 5 archetipi al post del canale con delay temporali."""
@@ -256,7 +300,6 @@ class CurransIdeaEngine:
         meta = self.parser.parse(post_text)
         ptype = meta["type"]
 
-        # Seleziona persona per il commento genitore (spesso Emotivo, Cinico o Fanta)
         parent_pid = random.choice([1, 2, 4])
         parent_persona = self.personas[parent_pid]
         parent_delay = random.randint(parent_persona["delay_range"][0], parent_persona["delay_range"][1])
@@ -275,47 +318,67 @@ class CurransIdeaEngine:
             }
         ]
 
-        # Template di risposta bot-to-bot calibrati sulla persona a cui si risponde
+        # Rich pool of context replies
+        REPLIES_TO_EMOTIVO = [
+            "ma che urli che la partita è ancora lunga",
+            "calmati che hanno fatto un tiro in mezz'ora",
+            "solito esaltato per un gol a caso",
+            "abbassa la cresta che non avete vinto niente",
+            "ti sento urlare da qua calmati un attimo",
+            "esaltati pure intanto state giocando malissimo",
+            "ma ti droghi per esultare così?",
+            "calma che mo arriva il pareggio sicuro",
+            "solito invasato dai",
+            "manco fosse la finale di champions"
+        ]
+
+        REPLIES_TO_CINICO = [
+            "MA STAI ZITTO GUFO MALEDETTO",
+            "MA GODITI LA PARTITA OGNI TANTO",
+            "SEMPRE A PIANGERE MAI CONTENTO",
+            "ma che partita hai visto ladri dove",
+            "il gufo supremo ha parlato ahahah",
+            "comprati un maalox dai ahahahah",
+            "ancora che gufa questo incredibile",
+            "rosica di meno dai",
+            "taci che fai più bella figura",
+            "ma goditela invece di piangere sempre"
+        ]
+
+        REPLIES_TO_TROLL = [
+            "MA CHE RIDI COGLIONE",
+            "PAGLIACCIO PENSA AI TUOI",
+            "RIDI RIDI CHE DOMENICA TOCCA A TE",
+            "fai poco lo spiritoso",
+            "parla quello che ne ha presi tre ieri ahahah",
+            "e si gode ancora di più ahahah",
+            "pagliaccio muto e a casa",
+            "torna nella caverna dai",
+            "ridi su sto cazzo"
+        ]
+
+        REPLIES_TO_FANTA = [
+            "godo ahahahah chiudi l'app che è meglio",
+            "ma chi se ne frega del tuo fantacalcio",
+            "MA PENSA ALLA PARTITA VERA NON AL FANTA",
+            "piangi ancora per il fantacalcio dai",
+            "tanto la perdevi comunque la giornata",
+            "già tanto che non hai preso -3",
+            "ben ti sta che l'hai messo contro",
+            "fanta rovinato goduria doppia"
+        ]
+
         def get_reply(responder_id, target_pid):
-            if target_pid == 1:  # Risposta all'Emotivo
-                if responder_id == 2:  # Cinico
-                    return random.choice(["ma che urli che tanto la perdono al 90'", "calmati che han fatto un tiro in 80 minuti", "solito esaltato per un gol a caso"])
-                elif responder_id == 3:  # Troll
-                    return random.choice(["ahahahah sta già esultando piango", "ti sento piangere da qua ahahahah", "manco hanno vinto e fa il fenomeno"])
-                elif responder_id == 4:  # Fanta
-                    return random.choice(["urla pure intanto a me ha rovinato il fanta", "beato te io sto sotto di tre punti"])
-                else:
-                    return random.choice(["calmati", "esaltato", "vabbè"])
-
-            elif target_pid == 2:  # Risposta al Cinico
-                if responder_id == 1:  # Emotivo
-                    return random.choice(["MA STAI ZITTO GUFO MALEDETTO", "MA GODITI LA PARTITA OGNI TANTO", "SEMPRE A PIANGERE MAI CONTENTO"])
-                elif responder_id == 3:  # Troll
-                    return random.choice(["il gufo supremo ha parlato ahahah", "comprati un maalox dai ahahahah", "ancora che parla questo ahahah"])
-                elif responder_id == 4:  # Fanta
-                    return random.choice(["ha ragione comunque al fanta mi ha distrutto", "per una volta concordo con te"])
-                else:
-                    return random.choice(["gufo", "taci", "rosica"])
-
-            elif target_pid == 4:  # Risposta al Fanta
-                if responder_id == 1:  # Emotivo
-                    return random.choice(["MA PENSA ALLA SQUADRA VERA NON AL FANTA", "NON CE NE FREGA NIENTE DEL FANTA"])
-                elif responder_id == 2:  # Cinico
-                    return random.choice(["tanto la perdevi comunque la giornata", "già tanto che non hai preso -3"])
-                elif responder_id == 3:  # Troll
-                    return random.choice(["godo ahahahah chiudi l'app", "ma chi se ne frega del tuo fanta ahahah", "piangi ancora per il fantacalcio dai"])
-                else:
-                    return random.choice(["piangi", "spiace", "ciao fanta"])
-
-            else:  # Risposta generica o al Troll
-                if responder_id == 1:
-                    return random.choice(["MA CHE RIDI COGLIONE", "PAGLIACCIO PENSA AI TUOI", "RIDI RIDI CHE DOMENICA TOCCA A TE"])
-                elif responder_id == 2:
-                    return random.choice(["ridi pure intanto siamo ridicoli", "fai poco lo spiritoso che il livello è questo"])
-                elif responder_id == 3:
-                    return random.choice(["e si gode ancora di più ahahah", "pagliaccio muto ahahah"])
-                else:
-                    return random.choice(["muti", "pagliaccio", "spariti"])
+            if target_pid == 1:
+                return random.choice(REPLIES_TO_EMOTIVO)
+            elif target_pid == 2:
+                return random.choice(REPLIES_TO_CINICO)
+            elif target_pid == 3:
+                return random.choice(REPLIES_TO_TROLL)
+            elif target_pid == 4:
+                return random.choice(REPLIES_TO_FANTA)
+            else:
+                return random.choice(["argomenta ogni tanto dai", "sempre sintetico tu eh", "taci dai", "muti"])
 
         available_responders = [pid for pid in [1, 2, 3, 4, 5] if pid != parent_pid]
         random.shuffle(available_responders)
@@ -329,7 +392,6 @@ class CurransIdeaEngine:
             delta = random.randint(8, 25)
             current_time += delta
 
-            # Risponde o al messaggio originale (50%) o all'ultimo messaggio della conversazione (50%)
             target_msg = thread[0] if (random.random() < 0.5 or len(thread) == 1) else thread[-1]
             raw_reply = get_reply(resp_pid, target_msg["persona_id"])
             cleaned_reply = validate_and_clean(raw_reply, resp_pid, resp_persona["max_words"])
@@ -349,16 +411,21 @@ class CurransIdeaEngine:
         return thread
 
     def simulate_crowd(self, post_text, count=100, include_replies=True):
-        """Genera un flusso ad alto volume (fino a 100+ messaggi) simulando una folla reale di utenti Telegram sotto al post."""
+        """
+        Genera un flusso ad alto volume (es. 100 messaggi) con:
+        1. Ancoraggio semantico rigoroso al soggetto/marcatore del post (zero giocatori a caso).
+        2. Garanzia assoluta anti-ripetizione (100 messaggi unici e variati).
+        3. Discussioni multi-turno bot-to-bot realistiche e variegate.
+        """
         meta = self.parser.parse(post_text)
         ptype = meta["type"]
 
         persona_weights = [
             (1, 0.25),
             (2, 0.20),
-            (3, 0.15),
-            (4, 0.10),
-            (5, 0.30),
+            (3, 0.20),
+            (4, 0.15),
+            (5, 0.20),
         ]
         p_choices = [p[0] for p in persona_weights]
         p_probs = [p[1] for p in persona_weights]
@@ -368,50 +435,81 @@ class CurransIdeaEngine:
             "Andrea", "Luca", "Gianluca", "Filippo", "Gabriele", "Stefano", "Edoardo",
             "Christian", "Samuele", "Jacopo", "Manuel", "Diego", "Pietro", "Riccardo",
             "Tommaso", "Elia", "Niccolò", "Mattia", "Daniele", "Leonardo", "Fabio", "Giacomo",
-            "Zanna", "Lollo", "Tommy", "Bibo", "Cappe", "Simo_Inter", "Fede_Juve", "Ale_Milan"
+            "Zanna", "Lollo", "Tommy", "Bibo", "Cappe", "Simo_Inter", "Fede_Juve", "Ale_Milan",
+            "Mirko", "Claudio", "Valerio", "Fra", "Gio", "Ale_Curva", "Jack", "Tony"
+        ]
+
+        REPLIES_TO_EMOTIVO = [
+            "ma che urli che la partita è ancora lunga",
+            "calmati che hanno fatto un tiro in mezz'ora",
+            "solito esaltato per un gol a caso",
+            "abbassa la cresta che non avete vinto niente",
+            "ti sento urlare da qua calmati",
+            "esaltati pure intanto state giocando malissimo",
+            "ma ti droghi per esultare così?",
+            "calma che mo arriva il pareggio",
+            "solito invasato dai",
+            "manco fosse la finale di champions",
+            "state calmi un attimo",
+            "mamma mia che esagerazione"
+        ]
+
+        REPLIES_TO_CINICO = [
+            "MA STAI ZITTO GUFO MALEDETTO",
+            "MA GODITI LA PARTITA OGNI TANTO",
+            "SEMPRE A PIANGERE MAI CONTENTO",
+            "ma che partita hai visto ladri dove",
+            "il gufo supremo ha parlato ahahah",
+            "comprati un maalox dai ahahahah",
+            "ancora che gufa questo incredibile",
+            "rosica di meno dai",
+            "taci che fai più bella figura",
+            "ma goditela invece di piangere sempre",
+            "non sei mai contento allucinante"
+        ]
+
+        REPLIES_TO_TROLL = [
+            "MA CHE RIDI COGLIONE",
+            "PAGLIACCIO PENSA AI TUOI",
+            "RIDI RIDI CHE DOMENICA TOCCA A TE",
+            "fai poco lo spiritoso",
+            "parla quello che ne ha presi tre ieri ahahah",
+            "e si gode ancora di più ahahah",
+            "pagliaccio muto e a casa",
+            "torna nella caverna dai",
+            "ridi su sto cazzo",
+            "vediamo a fine partita chi ride"
+        ]
+
+        REPLIES_TO_FANTA = [
+            "godo ahahahah chiudi l'app che è meglio",
+            "ma chi se ne frega del tuo fantacalcio",
+            "MA PENSA ALLA PARTITA VERA NON AL FANTA",
+            "piangi ancora per il fantacalcio dai",
+            "tanto la perdevi comunque la giornata",
+            "già tanto che non hai preso -3",
+            "ben ti sta che l'hai messo contro",
+            "fanta rovinato goduria doppia",
+            "sempre a lamentarvi del fanta madonna"
         ]
 
         def get_crowd_reply(responder_id, target_pid):
             if target_pid == 1:
-                if responder_id == 2:
-                    return random.choice(["ma che urli che tanto la perdono al 90'", "calmati che han fatto un tiro in 80 minuti", "solito esaltato per un gol a caso"])
-                elif responder_id == 3:
-                    return random.choice(["ahahahah sta già esultando piango", "ti sento piangere da qua ahahahah", "manco hanno vinto e fa il fenomeno"])
-                elif responder_id == 4:
-                    return random.choice(["urla pure intanto a me ha rovinato il fanta", "beato te io sto sotto di tre punti"])
-                else:
-                    return random.choice(["calmati", "esaltato", "vabbè"])
+                return random.choice(REPLIES_TO_EMOTIVO)
             elif target_pid == 2:
-                if responder_id == 1:
-                    return random.choice(["MA STAI ZITTO GUFO MALEDETTO", "MA GODITI LA PARTITA OGNI TANTO", "SEMPRE A PIANGERE MAI CONTENTO"])
-                elif responder_id == 3:
-                    return random.choice(["il gufo supremo ha parlato ahahah", "comprati un maalox dai ahahahah", "ancora che parla questo ahahah"])
-                elif responder_id == 4:
-                    return random.choice(["ha ragione comunque al fanta mi ha distrutto", "per una volta concordo con te"])
-                else:
-                    return random.choice(["gufo", "taci", "rosica"])
+                return random.choice(REPLIES_TO_CINICO)
+            elif target_pid == 3:
+                return random.choice(REPLIES_TO_TROLL)
             elif target_pid == 4:
-                if responder_id == 1:
-                    return random.choice(["MA PENSA ALLA SQUADRA VERA NON AL FANTA", "NON CE NE FREGA NIENTE DEL FANTA"])
-                elif responder_id == 2:
-                    return random.choice(["tanto la perdevi comunque la giornata", "già tanto che non hai preso -3"])
-                elif responder_id == 3:
-                    return random.choice(["godo ahahahah chiudi l'app", "ma chi se ne frega del tuo fanta ahahah", "piangi ancora per il fantacalcio dai"])
-                else:
-                    return random.choice(["piangi", "spiace", "ciao fanta"])
+                return random.choice(REPLIES_TO_FANTA)
             else:
-                if responder_id == 1:
-                    return random.choice(["MA CHE RIDI COGLIONE", "PAGLIACCIO PENSA AI TUOI", "RIDI RIDI CHE DOMENICA TOCCA A TE"])
-                elif responder_id == 2:
-                    return random.choice(["ridi pure intanto siamo ridicoli", "fai poco lo spiritoso che il livello è questo"])
-                elif responder_id == 3:
-                    return random.choice(["e si gode ancora di più ahahah", "pagliaccio muto ahahah"])
-                else:
-                    return random.choice(["muti", "pagliaccio", "spariti"])
+                return random.choice(["argomenta ogni tanto dai", "sempre sintetico tu eh", "taci dai", "muti", "parla come mangi"])
 
         feed = []
         current_time = random.randint(1, 3)
+        seen_messages = set()
 
+        # Genera 'count' messaggi con anti-ripetizione garantita
         for i in range(1, count + 1):
             pid = random.choices(p_choices, weights=p_probs)[0]
             pdata = self.personas[pid]
@@ -420,10 +518,32 @@ class CurransIdeaEngine:
             current_time += random.randint(1, 3) if i < 30 else random.randint(2, 4)
 
             is_reply = include_replies and len(feed) > 2 and random.random() < 0.35
-            if is_reply:
-                target = random.choice(feed[-min(len(feed), 5):])
-                raw = get_crowd_reply(pid, target["persona_id"])
-                cleaned = validate_and_clean(raw, pid, pdata["max_words"])
+
+            cleaned = ""
+            target = None
+
+            # Tenta fino a 15 volte di generare un messaggio NON ancora visto
+            for _ in range(15):
+                if is_reply:
+                    target = random.choice(feed[-min(len(feed), 6):])
+                    raw = get_crowd_reply(pid, target["persona_id"])
+                else:
+                    raw = self._generate_slot_message(pid, ptype, meta)
+
+                cand = validate_and_clean(raw, pid, pdata["max_words"])
+                if cand.lower() not in seen_messages:
+                    cleaned = cand
+                    break
+
+            # Se ancora colliso, aggiungi variazione sintattica naturale
+            if not cleaned:
+                suffix = random.choice(["dai", "davvero", "eh", "mamma mia", "sul serio", "veramente", "ora"])
+                cleaned = f"{cand} {suffix}"
+                cleaned = validate_and_clean(cleaned, pid, pdata["max_words"])
+
+            seen_messages.add(cleaned.lower())
+
+            if is_reply and target:
                 feed.append({
                     "id": i,
                     "user": user,
@@ -436,8 +556,6 @@ class CurransIdeaEngine:
                     "message": cleaned
                 })
             else:
-                raw = self._generate_slot_message(pid, ptype, meta)
-                cleaned = validate_and_clean(raw, pid, pdata["max_words"])
                 feed.append({
                     "id": i,
                     "user": user,

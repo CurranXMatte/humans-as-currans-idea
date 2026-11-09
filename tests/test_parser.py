@@ -13,6 +13,15 @@ def test_parse_goal_post():
     assert data["team_away"] == "Milan"
     assert data["competition"] == "SerieA"
 
+def test_parse_casual_goal_post():
+    parser = ChannelPostParser()
+    post = "goal fabrizio romano"
+    data = parser.parse(post)
+
+    assert data["type"] == "GOAL"
+    assert data["scorer"] == "Fabrizio Romano"
+    assert data["subject"] == "Fabrizio Romano"
+
 def test_parse_injury_post():
     parser = ChannelPostParser()
     post = "🚑 COMUNICATO UFFICIALE: Trauma distorsivo al ginocchio per Bremer"

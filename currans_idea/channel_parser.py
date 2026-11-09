@@ -1,14 +1,17 @@
 import re
 
-# parser intelligente per i post del canale telegram
+# Parser intelligente per i post del canale telegram e input in linguaggio naturale
 class ChannelPostParser:
     @staticmethod
     def clean_player_name(name):
         if not name:
             return ""
-        # rimuove iniziali puntate tipo "Mbappé K." -> "Mbappé"
-        cleaned = re.sub(r'\s+[A-Z]\.?$', '', name.strip())
-        return cleaned
+        # Rimuove punteggiatura superflua, 'per', 'di', o iniziali puntate tipo "Mbappé K." -> "Mbappé"
+        cleaned = re.sub(r'^(?:di|per|a|su)\s+', '', name.strip(), flags=re.IGNORECASE)
+        cleaned = re.sub(r'\s+[A-Z]\.?$', '', cleaned.strip())
+        # Capitalize ogni parola
+        words = cleaned.split()
+        return " ".join(w.capitalize() for w in words) if words else ""
 
     @classmethod
     def parse(cls, post_text):
@@ -21,6 +24,7 @@ class ChannelPostParser:
             "assister": None,
             "minute": None,
             "player": None,
+            "subject": None,
             "competition": None,
             "raw_text": post_text
         }
@@ -36,9 +40,10 @@ class ChannelPostParser:
         elif "SERIE A" in upper:
             data["competition"] = "Serie A"
             
-        # 2. Squadre (Flag Team 🆚 Team Flag)
-        if "🆚" in post_text:
-            parts = post_text.split("🆚")
+        # 2. Squadre (Flag Team 🆚 Team Flag, o Team vs Team)
+        if "🆚" in post_text or re.search(r'\bvs\b', post_text, re.IGNORECASE):
+            delimiter = "🆚" if "🆚" in post_text else re.search(r'\bvs\b', post_text, re.IGNORECASE).group(0)
+            parts = post_text.split(delimiter)
             before = parts[0].strip().split("\n")[-1]
             after = parts[1].strip().split("\n")[0]
 
@@ -54,43 +59,74 @@ class ChannelPostParser:
             if m_away:
                 data["team_away"] = " ".join(m_away)
             
-        # 3. Classificazione tipo di post
-        if "GOAL!" in upper or "GOL!" in upper:
+        # 3. Classificazione tipo di post e entità
+        is_goal = bool(re.search(r'\b(GOAL|GOL|RETE|SEGNA|HA SEGNATO)\b', upper) or "⚽" in post_text)
+        
+        if is_goal:
             data["type"] = "GOAL"
             score_m = re.search(r'(\d+)\s*-\s*(\d+)', post_text)
             if score_m:
                 data["score"] = f"{score_m.group(1)}-{score_m.group(2)}"
-            scorer_m = re.search(r'⚽️\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*👟|\s*⏱️|\n|$)', post_text)
-            if scorer_m:
+            
+            # Cerca marcatore con emoji ⚽️
+            scorer_m = re.search(r'⚽️?\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*👟|\s*⏱️|\s*#|\s*🆚|\d+\s*-\s*\d+|$|\n)', post_text)
+            if scorer_m and scorer_m.group(1).strip() and not re.search(r'\b(GOAL|GOL)\b', scorer_m.group(1), re.IGNORECASE):
                 data["scorer"] = cls.clean_player_name(scorer_m.group(1))
-            assist_m = re.search(r'👟\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*⏱️|\n|$)', post_text)
+            else:
+                # Fallback linguaggio naturale: "goal fabrizio romano", "gol di leao", "ha segnato osimhen"
+                nat_m = re.search(r'(?:goal|gol|rete|segna|ha segnato)\s+(?:di\s+|per\s+)?([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*👟|\s*⏱️|\s*#|\s*🆚|\d+\s*-\s*\d+|$|\n)', post_text, re.IGNORECASE)
+                if nat_m:
+                    data["scorer"] = cls.clean_player_name(nat_m.group(1))
+
+            assist_m = re.search(r'(?:👟|assist\s+(?:di\s+)?)\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*⏱️|\s*#|\s*🆚|\n|$)', post_text, re.IGNORECASE)
             if assist_m and assist_m.group(1).strip() not in ["---", "-", ""]:
                 data["assister"] = cls.clean_player_name(assist_m.group(1))
+                
             min_m = re.search(r'⏱️?\s*(\d+[\'’]?)', post_text)
             if min_m:
                 data["minute"] = min_m.group(1).strip()
                 
-        elif "FORMAZIONI UFFICIALI" in upper:
+        elif "FORMAZIONI UFFICIALI" in upper or "TITOLARI" in upper:
             data["type"] = "LINEUP"
-        elif "FINE PARTITA" in upper or "FINALE!" in upper:
+        elif "FINE PARTITA" in upper or "FINALE!" in upper or "FINALE" in upper:
             data["type"] = "FULL_TIME"
             score_m = re.search(r'(\d+)\s*-\s*(\d+)', post_text)
             if score_m:
                 data["score"] = f"{score_m.group(1)}-{score_m.group(2)}"
-        elif "INTERVALLO" in upper:
+        elif "INTERVALLO" in upper or "FINE PRIMO TEMPO" in upper:
             data["type"] = "HALF_TIME"
         elif "INIZIO PARTITA" in upper or "INIZIO SECONDO TEMPO" in upper:
             data["type"] = "MATCH_START"
-        elif "CARTELLINO ROSSO" in upper or "ESPULSIONE" in upper:
+        elif re.search(r'\b(CARTELLINO ROSSO|ESPULSIONE|ESPULSO)\b', upper) or "🟥" in post_text:
             data["type"] = "RED_CARD"
+            red_m = re.search(r'(?:rosso|espulsione|espulso)\s*(?:a|per|di|diretto)?\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*#|\s*al\s*\d+|\s*⏱️|$|\n)', post_text, re.IGNORECASE)
+            if red_m:
+                data["player"] = cls.clean_player_name(red_m.group(1))
         elif "RIGORE" in upper:
             data["type"] = "PENALTY"
         elif "ANNULLATO" in upper:
             data["type"] = "DISALLOWED"
-        elif "COMUNICATO UFFICIALE" in upper or "🚑" in post_text or any(k in post_text.lower() for k in ["trauma", "lesione", "crociato", "distorsivo"]):
+        elif "COMUNICATO UFFICIALE" in upper or "🚑" in post_text or any(k in post_text.lower() for k in ["trauma", "lesione", "crociato", "distorsivo", "infortunio"]):
             data["type"] = "INJURY"
-            doc_m = re.search(r'(?:comunicato che|ufficiale\s*:?|nei confronti di|infortunio a|infortunio per|lesione per|per|di)\s+([A-ZÀ-ÿ][a-zà-ÿ]+(?:\s+[A-ZÀ-ÿ][a-zà-ÿ]+)?)', post_text)
+            doc_m = re.search(r'(?:per|di|infortunio a|infortunio per|lesione per)\s+([A-ZÀ-ÿ][a-zà-ÿ]+(?:\s+[A-ZÀ-ÿ][a-zà-ÿ]+)?)', post_text)
             if doc_m:
-                data["player"] = doc_m.group(1).strip()
-                
+                data["player"] = cls.clean_player_name(doc_m.group(1))
+            else:
+                nat_doc = re.search(r'(?:infortunio|trauma|lesione|rotto)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s*#|$|\n)', post_text, re.IGNORECASE)
+                if nat_doc:
+                    data["player"] = cls.clean_player_name(nat_doc.group(1))
+
+        # 4. Imposta subject prioritario: chiunque sia l'entità principale dell'evento
+        if data["scorer"]:
+            data["subject"] = data["scorer"]
+        elif data["player"]:
+            data["subject"] = data["player"]
+        else:
+            # Fallback per post generici: estrai il primo nome proprio o parola chiave
+            clean_tokens = [w for w in re.findall(r'[A-Za-zÀ-ÿ0-9]+', post_text) if len(w) > 2 and w.lower() not in {"del", "della", "degli", "delle", "con", "per", "tra", "fra", "che", "non", "dal", "dallo", "nel", "nella", "dei", "sul", "sulla", "post", "canale", "ufficiale"}]
+            if clean_tokens:
+                data["subject"] = " ".join(w.capitalize() for w in clean_tokens[:2])
+            else:
+                data["subject"] = "la squadra"
+
         return data
