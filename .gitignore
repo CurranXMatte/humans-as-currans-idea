@@ -24,6 +24,7 @@ wheels/
 .venv
 venv/
 ENV/
+.env*
 
 # Data & Privacy - NEVER COMMIT RAW CHAT EXPORTS
 *.json
