@@ -7,9 +7,8 @@ class ChannelPostParser:
         if not name:
             return ""
         # Rimuove punteggiatura superflua, 'per', 'di', o iniziali puntate tipo "Mbappé K." -> "Mbappé"
-        cleaned = re.sub(r'^(?:di|per|a|su)\s+', '', name.strip(), flags=re.IGNORECASE)
+        cleaned = re.sub(r'^(?:di|per|a|su|goal|gol|rete)\s+', '', name.strip(), flags=re.IGNORECASE)
         cleaned = re.sub(r'\s+[A-Z]\.?$', '', cleaned.strip())
-        # Capitalize ogni parola
         words = cleaned.split()
         return " ".join(w.capitalize() for w in words) if words else ""
 
@@ -68,20 +67,28 @@ class ChannelPostParser:
             if score_m:
                 data["score"] = f"{score_m.group(1)}-{score_m.group(2)}"
             
-            # Cerca marcatore con emoji ⚽️
-            scorer_m = re.search(r'⚽️?\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*👟|\s*⏱️|\s*#|\s*🆚|\d+\s*-\s*\d+|$|\n)', post_text)
-            if scorer_m and scorer_m.group(1).strip() and not re.search(r'\b(GOAL|GOL)\b', scorer_m.group(1), re.IGNORECASE):
-                data["scorer"] = cls.clean_player_name(scorer_m.group(1))
-            else:
-                # Fallback linguaggio naturale: "goal fabrizio romano", "gol di leao", "ha segnato osimhen"
+            # Cerca marcatore dopo l'emoji ⚽️
+            ball_matches = re.findall(r'⚽️?\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*👟|\s*⏱️|\s*#|\s*🆚|\d+\s*-\s*\d+|$|\n)', post_text)
+            for cand in ball_matches:
+                cand = cand.strip()
+                cand = re.sub(r'^(?:GOAL|GOL|RETE)[!\s]*', '', cand, flags=re.IGNORECASE).strip()
+                if cand and not re.search(r'^(GOAL|GOL|RETE)$', cand, re.IGNORECASE):
+                    data["scorer"] = cls.clean_player_name(cand)
+                    break
+
+            # Fallback marcatore linguaggio naturale: "goal fabrizio romano", "gol di leao", "ha segnato osimhen"
+            if not data["scorer"]:
                 nat_m = re.search(r'(?:goal|gol|rete|segna|ha segnato)\s+(?:di\s+|per\s+)?([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*👟|\s*⏱️|\s*#|\s*🆚|\d+\s*-\s*\d+|$|\n)', post_text, re.IGNORECASE)
                 if nat_m:
-                    data["scorer"] = cls.clean_player_name(nat_m.group(1))
+                    cand = nat_m.group(1).strip()
+                    if cand and not re.search(r'^(GOAL|GOL|RETE)$', cand, re.IGNORECASE):
+                        data["scorer"] = cls.clean_player_name(cand)
 
-            assist_m = re.search(r'(?:👟|assist\s+(?:di\s+)?)\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*⏱️|\s*#|\s*🆚|\n|$)', post_text, re.IGNORECASE)
+            # Cerca assistman
+            assist_m = re.search(r'(?:👟|assist\s+(?:di\s+)?)\s*([A-Za-zÀ-ÿ\s\.\'\-]+?)(?:\s*⏱️|\s*#|\s*🆚|\d+\s*-\s*\d+|$|\n)', post_text, re.IGNORECASE)
             if assist_m and assist_m.group(1).strip() not in ["---", "-", ""]:
                 data["assister"] = cls.clean_player_name(assist_m.group(1))
-                
+
             min_m = re.search(r'⏱️?\s*(\d+[\'’]?)', post_text)
             if min_m:
                 data["minute"] = min_m.group(1).strip()
@@ -121,9 +128,11 @@ class ChannelPostParser:
             data["subject"] = data["scorer"]
         elif data["player"]:
             data["subject"] = data["player"]
+        elif data["team_home"]:
+            data["subject"] = data["team_home"]
         else:
-            # Fallback per post generici: estrai il primo nome proprio o parola chiave
-            clean_tokens = [w for w in re.findall(r'[A-Za-zÀ-ÿ0-9]+', post_text) if len(w) > 2 and w.lower() not in {"del", "della", "degli", "delle", "con", "per", "tra", "fra", "che", "non", "dal", "dallo", "nel", "nella", "dei", "sul", "sulla", "post", "canale", "ufficiale"}]
+            # Fallback per post generici: estrai il primo nome proprio o parola chiave escludendo hashtag/campionati/goal
+            clean_tokens = [w for w in re.findall(r'[A-Za-zÀ-ÿ0-9]+', post_text) if len(w) > 2 and w.lower() not in {"goal", "gol", "rete", "seriea", "championsleague", "europaleague", "laliga", "premierleague", "del", "della", "degli", "delle", "con", "per", "tra", "fra", "che", "non", "dal", "dallo", "nel", "nella", "dei", "sul", "sulla", "post", "canale", "ufficiale"}]
             if clean_tokens:
                 data["subject"] = " ".join(w.capitalize() for w in clean_tokens[:2])
             else:
