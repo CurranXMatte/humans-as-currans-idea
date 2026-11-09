@@ -38,6 +38,21 @@ def test_api_thread():
     assert "thread" in data
     assert len(data["thread"]) == 4  # 1 genitore + 3 risposte
 
+def test_api_crowd():
+    response = client.post("/api/v1/crowd", json={"text": "GOAL! ⚽️ Kvaratskhelia ⏱️ 60' Napoli 🆚 Inter", "count": 25})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 25
+    assert len(data["feed"]) == 25
+    assert "user" in data["feed"][0]
+    assert "message" in data["feed"][0]
+
+def test_api_dashboard():
+    response = client.get("/dashboard")
+    assert response.status_code == 200
+    assert "Humans as Curran's Idea" in response.text
+    assert "<!DOCTYPE html>" in response.text
+
 def test_api_empty_post_error():
     response = client.post("/api/v1/simulate", json={"text": "   "})
     assert response.status_code == 400

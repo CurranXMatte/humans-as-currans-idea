@@ -347,3 +347,107 @@ class CurransIdeaEngine:
             last_id = new_id
 
         return thread
+
+    def simulate_crowd(self, post_text, count=100, include_replies=True):
+        """Genera un flusso ad alto volume (fino a 100+ messaggi) simulando una folla reale di utenti Telegram sotto al post."""
+        meta = self.parser.parse(post_text)
+        ptype = meta["type"]
+
+        persona_weights = [
+            (1, 0.25),
+            (2, 0.20),
+            (3, 0.15),
+            (4, 0.10),
+            (5, 0.30),
+        ]
+        p_choices = [p[0] for p in persona_weights]
+        p_probs = [p[1] for p in persona_weights]
+
+        community_names = [
+            "Matteo", "Curran", "Marco", "Federico", "Ale", "Lorenzo", "Simone", "Davide",
+            "Andrea", "Luca", "Gianluca", "Filippo", "Gabriele", "Stefano", "Edoardo",
+            "Christian", "Samuele", "Jacopo", "Manuel", "Diego", "Pietro", "Riccardo",
+            "Tommaso", "Elia", "Niccolò", "Mattia", "Daniele", "Leonardo", "Fabio", "Giacomo",
+            "Zanna", "Lollo", "Tommy", "Bibo", "Cappe", "Simo_Inter", "Fede_Juve", "Ale_Milan"
+        ]
+
+        def get_crowd_reply(responder_id, target_pid):
+            if target_pid == 1:
+                if responder_id == 2:
+                    return random.choice(["ma che urli che tanto la perdono al 90'", "calmati che han fatto un tiro in 80 minuti", "solito esaltato per un gol a caso"])
+                elif responder_id == 3:
+                    return random.choice(["ahahahah sta già esultando piango", "ti sento piangere da qua ahahahah", "manco hanno vinto e fa il fenomeno"])
+                elif responder_id == 4:
+                    return random.choice(["urla pure intanto a me ha rovinato il fanta", "beato te io sto sotto di tre punti"])
+                else:
+                    return random.choice(["calmati", "esaltato", "vabbè"])
+            elif target_pid == 2:
+                if responder_id == 1:
+                    return random.choice(["MA STAI ZITTO GUFO MALEDETTO", "MA GODITI LA PARTITA OGNI TANTO", "SEMPRE A PIANGERE MAI CONTENTO"])
+                elif responder_id == 3:
+                    return random.choice(["il gufo supremo ha parlato ahahah", "comprati un maalox dai ahahahah", "ancora che parla questo ahahah"])
+                elif responder_id == 4:
+                    return random.choice(["ha ragione comunque al fanta mi ha distrutto", "per una volta concordo con te"])
+                else:
+                    return random.choice(["gufo", "taci", "rosica"])
+            elif target_pid == 4:
+                if responder_id == 1:
+                    return random.choice(["MA PENSA ALLA SQUADRA VERA NON AL FANTA", "NON CE NE FREGA NIENTE DEL FANTA"])
+                elif responder_id == 2:
+                    return random.choice(["tanto la perdevi comunque la giornata", "già tanto che non hai preso -3"])
+                elif responder_id == 3:
+                    return random.choice(["godo ahahahah chiudi l'app", "ma chi se ne frega del tuo fanta ahahah", "piangi ancora per il fantacalcio dai"])
+                else:
+                    return random.choice(["piangi", "spiace", "ciao fanta"])
+            else:
+                if responder_id == 1:
+                    return random.choice(["MA CHE RIDI COGLIONE", "PAGLIACCIO PENSA AI TUOI", "RIDI RIDI CHE DOMENICA TOCCA A TE"])
+                elif responder_id == 2:
+                    return random.choice(["ridi pure intanto siamo ridicoli", "fai poco lo spiritoso che il livello è questo"])
+                elif responder_id == 3:
+                    return random.choice(["e si gode ancora di più ahahah", "pagliaccio muto ahahah"])
+                else:
+                    return random.choice(["muti", "pagliaccio", "spariti"])
+
+        feed = []
+        current_time = random.randint(1, 3)
+
+        for i in range(1, count + 1):
+            pid = random.choices(p_choices, weights=p_probs)[0]
+            pdata = self.personas[pid]
+            user = random.choice(community_names)
+
+            current_time += random.randint(1, 3) if i < 30 else random.randint(2, 4)
+
+            is_reply = include_replies and len(feed) > 2 and random.random() < 0.35
+            if is_reply:
+                target = random.choice(feed[-min(len(feed), 5):])
+                raw = get_crowd_reply(pid, target["persona_id"])
+                cleaned = validate_and_clean(raw, pid, pdata["max_words"])
+                feed.append({
+                    "id": i,
+                    "user": user,
+                    "in_reply_to_id": target["id"],
+                    "in_reply_to_user": target["user"],
+                    "in_reply_to_snippet": target["message"][:30] + ("..." if len(target["message"]) > 30 else ""),
+                    "persona_id": pid,
+                    "persona_name": pdata["name"],
+                    "delay_seconds": current_time,
+                    "message": cleaned
+                })
+            else:
+                raw = self._generate_slot_message(pid, ptype, meta)
+                cleaned = validate_and_clean(raw, pid, pdata["max_words"])
+                feed.append({
+                    "id": i,
+                    "user": user,
+                    "in_reply_to_id": None,
+                    "in_reply_to_user": None,
+                    "in_reply_to_snippet": None,
+                    "persona_id": pid,
+                    "persona_name": pdata["name"],
+                    "delay_seconds": current_time,
+                    "message": cleaned
+                })
+
+        return feed

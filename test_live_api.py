@@ -74,6 +74,27 @@ def test_api(base_url):
     except Exception as e:
         print(f"   ❌ Errore: {e}")
 
+    # 5. Test Crowd Feed (100 messaggi in tempo reale)
+    print("\n5️⃣  Test Folla Telegram (100 messaggi) (POST /api/v1/crowd)...")
+    crowd_payload = {
+        "text": "GOAL! ⚽️ Lautaro Martinez ⏱️ 34' Inter 🆚 Milan #SerieA",
+        "count": 100,
+        "include_replies": True
+    }
+    crowd_req = urllib.request.Request(
+        f"{base_url}/api/v1/crowd",
+        data=json.dumps(crowd_payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"}
+    )
+    try:
+        with urllib.request.urlopen(crowd_req, timeout=20) as resp:
+            c_res = json.loads(resp.read().decode())
+            print(f"   ✅ Folla generata con successo: {c_res['total']} messaggi!")
+            print(f"      Primo messaggio: [{c_res['feed'][0]['user']}]: {c_res['feed'][0]['message']}")
+            print(f"      Ultimo messaggio (#{c_res['total']}): [{c_res['feed'][-1]['user']} | +{c_res['feed'][-1]['delay_seconds']}s]: {c_res['feed'][-1]['message']}")
+    except Exception as e:
+        print(f"   ❌ Errore: {e}")
+
     print("\n" + "=" * 65)
     print(f"✨ Test completato con successo! Swagger docs: {base_url}/docs")
     print("=" * 65)
