@@ -27,6 +27,7 @@ ENV/
 
 # Data & Privacy - NEVER COMMIT RAW CHAT EXPORTS
 *.json
+!vercel.json
 *.html
 *.txt
 !requirements.txt
